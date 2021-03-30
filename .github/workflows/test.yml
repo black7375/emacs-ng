@@ -43,7 +43,7 @@ jobs:
             - name: prepare build(mac)
               if: ${{ matrix.os == 'macos-latest' }}
               run: |
-                  xcode-select --install
+                  # xcode-select --install ## Alreay Installed
                   brew install texinfo libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses automake autoconf
 
                   # https://github.com/memkind/memkind/issues/33
