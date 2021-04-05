@@ -13,6 +13,18 @@ jobs:
         steps:
             - uses: actions/checkout@v2
 
+
+            - uses: pCYSl5EDgo/cat@master
+              id: toolchain
+              with:
+                  path: rust-toolchain
+
+            - uses: actions-rs/toolchain@v1
+              with:
+                  toolchain: ${{ steps.toolchain.outputs.text }}
+                  override: true
+                  components: rustfmt-preview
+
             - name: Install dependencies on Linux
               if: runner.os == 'Linux'
               run: |
@@ -32,8 +44,6 @@ jobs:
                   # Configure $PATH: Executables are installed to $HOME/bin
                   export PATH="$HOME/bin:$PATH"
 
-                  rustup install $(cat rust-toolchain)
-                  rustup component add rustfmt-preview
                   ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings --without-native-compilation
                   admin/format-rust.sh
 
