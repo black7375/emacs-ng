@@ -34,7 +34,7 @@ jobs:
 
                   rustup install $(cat rust-toolchain)
                   rustup component add rustfmt-preview
-                  ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings --with-native-compilation
+                  ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings --without-native-compilation
                   admin/format-rust.sh
 
             - name: build
