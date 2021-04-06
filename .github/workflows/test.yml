@@ -57,6 +57,7 @@ jobs:
 
             - name: build
               run: |
+                  export CARGO_INCREMENTAL=0
                   export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
                   ./autogen.sh && RUSTFLAGS="-Dwarnings" WERROR_CFLAGS='-Werror -Wno-error=deprecated-declarations'
                   ./configure --enable-checking=glyphs
