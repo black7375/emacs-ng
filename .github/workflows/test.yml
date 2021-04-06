@@ -25,9 +25,14 @@ jobs:
                   override: true
                   components: rustfmt-preview
 
-            - uses: Swatinem/rust-cache@v1
+            - uses: actions/cache@v2
               with:
-                  sharedkey: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}
+                  path: |
+                    ~/.cargo/registry/index
+                    ~/.cargo/registry/cache
+                    ~/.cargo/git
+                    ./rust_src/target
+                  key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}
 
             - name: Install dependencies on Linux
               if: runner.os == 'Linux'
