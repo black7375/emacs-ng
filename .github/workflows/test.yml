@@ -30,6 +30,8 @@ jobs:
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
+              with:
+                  key: ${{ runner.os }}-build-ccache
 
             - name: Install dependencies on Linux
               if: runner.os == 'Linux'
