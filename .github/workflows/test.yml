@@ -59,9 +59,13 @@ jobs:
               run: |
                   export CARGO_INCREMENTAL=0
                   export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-                  ./autogen.sh && RUSTFLAGS="-Dwarnings" WERROR_CFLAGS='-Werror -Wno-error=deprecated-declarations'
+                  ./autogen.sh && RUSTFLAGS="-Dwarnings" WERROR_CFLAGS='-Werror -Wno-error=deprecated-declarations' CFLAGS=' -g' CXXFLAGS=' -g'
                   ./configure --enable-checking=glyphs
-                  make -j$(nproc)
+                  # make -j$((`nproc`+1)) lib
+                  # make -j$((`nproc`+1)) lib-src
+                  make -j$((`nproc`+1)) src
+                  # make -j$((`nproc`+1)) lisp
+                  # make -j$((`nproc`+1)) info
 
             - name: js fmt
               run: |
