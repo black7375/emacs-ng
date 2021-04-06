@@ -56,8 +56,6 @@ jobs:
             - name: build
               run: |
                   export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-                  which gcc
-                  which clang
                   ./autogen.sh && RUSTFLAGS="-Dwarnings" WERROR_CFLAGS='-Werror -Wno-error=deprecated-declarations'
                   ./configure --enable-checking=glyphs
                   make -j$(nproc)
