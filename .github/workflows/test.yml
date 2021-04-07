@@ -97,15 +97,14 @@ jobs:
 
                   # Debug Flags
                   # echo "Debug Process"
-                  # export RUSTFLAGS="-Dwarnings -Zshare-generics=y -Cdebuginfo=1 -Clink-arg=-fuse-ld=lld"
-                  # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
-                  # export CFLAGS=" -O0 -g"
-                  # export CXXFLAGS=" -O0 -g"
-                  # export CARGO_FLAGS=" -Copt-level=0"
+                  export RUSTFLAGS="-Dwarnings -Zshare-generics=y -Cdebuginfo=1 -Clink-arg=-fuse-ld=lld"
+                  export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
+                  export CFLAGS="-O0 -g"
+                  export CXXFLAGS="-O0 -g"
+                  export CARGO_FLAGS="-Copt-level=0"
 
                   echo "Configure Process"
-                  ./configure --enable-checking=glyphs --enable-rust-debug
-                  # --enable-autodepend
+                  ./configure --enable-checking=glyphs --enable-rust-debug --enable-autodepend
                   # echo "CC: $CC"
                   # echo "LD: $LD"
                   echo "nproc: $((`nproc`+1))"
