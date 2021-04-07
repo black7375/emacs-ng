@@ -85,7 +85,7 @@ jobs:
 
                   # Debug Flags
                   # echo "Debug Process"
-                  # export RUSTFLAGS="-Dwarnings -Z no-trans"
+                  # export RUSTFLAGS="-Dwarnings -Z no-trans -C debuginfo=2"
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
                   # export CFLAGS=" -O0 -g"
                   # export CXXFLAGS=" -g"
