@@ -44,6 +44,7 @@ jobs:
                   export RANLIB="llvm-ranlib"
                   export CCFLAGS+=" -fuse-ld=lld"
                   export CXXFLAGS+=" -fuse-ld=lld"
+                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
 
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
@@ -65,6 +66,7 @@ jobs:
                   export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
                   export CCFLAGS+=" -fuse-ld=/usr/local/opt/llvm/bin/lld"
                   export CXXFLAGS+=" -fuse-ld=/usr/local/opt/llvm/bin/lld"
+                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=/usr/local/opt/llvm/bin/lld"
 
                   # https://steipete.com/posts/zld-a-faster-linker/
 
@@ -98,7 +100,7 @@ jobs:
 
                   # Debug Flags
                   # echo "Debug Process"
-                  export RUSTFLAGS="-Zshare-generics=y -Copt-level=0 -Cdebuginfo=1 -Clink-arg=-fuse-ld=lld"
+                  export RUSTFLAGS="-Zshare-generics=y -Copt-level=0 -Cdebuginfo=1 $RUSTFLAGS"
                   # -Dwarnings
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
                   export CFLAGS="-O0 -g"
