@@ -39,6 +39,7 @@ jobs:
                   # build-essential
 
                   export AR="llvm-ar"
+                  export AS="llvm-as"
                   export RANLIB="llvm-ranlib"
 
             - name: Install dependencies on macOS
@@ -53,8 +54,11 @@ jobs:
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
 
+                  cd /usr/local/opt/llvm/bin
+                  ls -ll
                   export PATH="/usr/local/opt/llvm/bin:$PATH"
                   # https://steipete.com/posts/zld-a-faster-linker/
+                  ar --version
 
             - name: rustfmt
               run: |
@@ -76,14 +80,12 @@ jobs:
                   # echo "LD: $LD"
 
                   which lld
-                  which llvm-as
                   # Compile with clang
                   echo "Compile with clang"
                   export CC="clang"
                   export CXX="clang++"
                   export CPP="clang -E"
                   export LD="lld"
-                  export AS="llvm-as"
                   export CCFLAGS+=" -fuse-ld=lld"
                   export CXXFLAGS+=" -fuse-ld=lld"
                   # echo "CC: $CC"
