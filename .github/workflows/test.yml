@@ -50,7 +50,7 @@ jobs:
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
 
-                  echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"'
+                  export PATH="/usr/local/opt/llvm/bin:$PATH"
                   # https://steipete.com/posts/zld-a-faster-linker/
 
             - name: rustfmt
