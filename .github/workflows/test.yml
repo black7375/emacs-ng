@@ -50,6 +50,8 @@ jobs:
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
 
+                  # https://steipete.com/posts/zld-a-faster-linker/
+
             - name: rustfmt
               run: |
                   # Configure $PATH: Executables are installed to $HOME/bin
