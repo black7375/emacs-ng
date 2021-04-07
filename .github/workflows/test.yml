@@ -42,11 +42,12 @@ jobs:
                   export AR="llvm-ar"
                   export AS="llvm-as"
                   export RANLIB="llvm-ranlib"
-                  export CCFLAGS+=" -fuse-ld=lld"
-                  export CXXFLAGS+=" -fuse-ld=lld"
+                  export CCFLAGS=" -fuse-ld=lld"
+                  export CXXFLAGS=" -fuse-ld=lld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
 
             - name: Install dependencies on macOS
+              id: mac-deps
               if: runner.os == 'macOS'
               run: |
                   brew install gnutls texinfo automake autoconf llvm
@@ -57,6 +58,7 @@ jobs:
                   alias nproc="sysctl -n hw.logicalcpu"
 
                   # https://afnan.io/posts/2018-10-01-using-the-latest-llvm-release-on-macos/
+                  # https://steipete.com/posts/zld-a-faster-linker/
                   export PATH="/usr/local/opt/llvm/bin:$PATH"
                   export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
                   export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
@@ -64,11 +66,9 @@ jobs:
                   export AR="/usr/local/opt/llvm/bin/llvm-ar"
                   export AS="/usr/local/opt/llvm/bin/llvm-as"
                   export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  export CCFLAGS+=" -fuse-ld=/usr/local/opt/llvm/bin/lld"
-                  export CXXFLAGS+=" -fuse-ld=/usr/local/opt/llvm/bin/lld"
+                  export CCFLAGS=" -fuse-ld=/usr/local/opt/llvm/bin/lld"
+                  export CXXFLAGS=" -fuse-ld=/usr/local/opt/llvm/bin/lld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=/usr/local/opt/llvm/bin/lld"
-
-                  # https://steipete.com/posts/zld-a-faster-linker/
 
             - name: rustfmt
               run: |
