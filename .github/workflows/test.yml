@@ -35,13 +35,13 @@ jobs:
             - name: Install dependencies on Linux
               if: runner.os == 'Linux'
               run: |
-                  sudo apt install -y texinfo libx11-dev libxpm-dev libjpeg-dev libpng-dev libgif-dev libtiff-dev libgtk2.0-dev libncurses-dev automake autoconf libgnutls28-dev zlib1g-dev libgccjit-9-dev build-essential
-                  # clang llvm lld make
+                  sudo apt install -y texinfo libx11-dev libxpm-dev libjpeg-dev libpng-dev libgif-dev libtiff-dev libgtk2.0-dev libncurses-dev automake autoconf libgnutls28-dev zlib1g-dev libgccjit-9-dev clang llvm lld make
+                  # build-essential
 
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
               run: |
-                  brew install gnutls texinfo automake autoconf
+                  brew install gnutls texinfo automake autoconf llvm
                   # llvm --with-clang --with-lld
                   # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
                   export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
@@ -72,17 +72,17 @@ jobs:
                   # echo "LD: $LD"
 
                   # Compile with clang
-                  # echo "Compile with clang"
+                  echo "Compile with clang"
                   export CC="clang"
                   export CXX="clang++"
                   export CPP="clang -E"
-                  # export LD="lld"
-                  # export AR="llavm-ar"
-                  # export AS="llvm-as"
-                  # export CCFLAGS+=" -fuse-ld=lld"
-                  # export CXXFLAGS+=" -fuse-ld=lld"
-                  # echo "CC: $CC"
-                  # echo "LD: $LD"
+                  export LD="lld"
+                  export AR="llvm-ar"
+                  export AS="llvm-as"
+                  export CCFLAGS+=" -fuse-ld=lld"
+                  export CXXFLAGS+=" -fuse-ld=lld"
+                  echo "CC: $CC"
+                  echo "LD: $LD"
 
                   # Debug Flags
                   # echo "Debug Process"
