@@ -38,6 +38,8 @@ jobs:
                   sudo apt install -y texinfo libx11-dev libxpm-dev libjpeg-dev libpng-dev libgif-dev libtiff-dev libgtk2.0-dev libncurses-dev automake autoconf libgnutls28-dev zlib1g-dev libgccjit-9-dev clang llvm lld make
                   # build-essential
 
+                  export AR="llvm-ar"
+
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
               run: |
@@ -78,20 +80,20 @@ jobs:
                   export CXX="clang++"
                   export CPP="clang -E"
                   export LD="lld"
-                  export AR="llvm-ar"
                   export AS="llvm-as"
+                  export RANLIB="llvm-ranlib"
                   export CCFLAGS+=" -fuse-ld=lld"
                   export CXXFLAGS+=" -fuse-ld=lld"
-                  echo "CC: $CC"
-                  echo "LD: $LD"
+                  # echo "CC: $CC"
+                  # echo "LD: $LD"
 
                   # Debug Flags
                   # echo "Debug Process"
-                  # export RUSTFLAGS="-Dwarnings -Z no-trans -C debuginfo=2"
+                  # export RUSTFLAGS="-Dwarnings -Zshare-generics=y -Cdebuginfo=1 -Clink-arg=-fuse-ld=lld"
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
                   # export CFLAGS=" -O0 -g"
-                  # export CXXFLAGS=" -g"
-                  # export CARGO_FLAGS=" -C opt-level=0"
+                  # export CXXFLAGS=" -O0 -g"
+                  # export CARGO_FLAGS=" -Copt-level=0"
 
                   echo "Configure Process"
                   ./configure --enable-checking=glyphs --enable-rust-debug
