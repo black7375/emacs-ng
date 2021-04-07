@@ -6,7 +6,7 @@ jobs:
     unix-test:
         runs-on: ${{ matrix.os }}
         strategy:
-            fail-fast: false
+            fail-fast: true
             matrix:
                 os: [ubuntu-latest, macos-latest]
 
@@ -48,16 +48,16 @@ jobs:
                   brew install gnutls texinfo automake autoconf llvm
                   # llvm --with-clang --with-lld
                   # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
-                  export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
-                  export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
 
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
 
                   cd /usr/local/opt/llvm/bin
                   ls
-                  export PATH="$PATH:/usr/local/opt/llvm/bin"
+                  export PATH="/usr/local/opt/llvm/bin:$PATH"
                   echo $PATH
+                  export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
+                  export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
                   # https://steipete.com/posts/zld-a-faster-linker/
                   /usr/local/opt/llvm/bin/lld --version
                   lld --version
