@@ -58,6 +58,9 @@ jobs:
                   ls
                   export PATH="/usr/local/opt/llvm/bin:$PATH"
                   # https://steipete.com/posts/zld-a-faster-linker/
+                  export AR="/usr/local/opt/llvm/bin/llvm-ar"
+                  export AS="/usr/local/opt/llvm/bin/llvm-as"
+                  export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
 
             - name: rustfmt
               run: |
