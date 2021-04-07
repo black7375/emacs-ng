@@ -56,7 +56,8 @@ jobs:
 
                   cd /usr/local/opt/llvm/bin
                   ls
-                  export PATH="/usr/local/opt/llvm/bin:$PATH"
+                  export PATH="$PATH:/usr/local/opt/llvm/bin"
+                  echo $PATH
                   # https://steipete.com/posts/zld-a-faster-linker/
                   /usr/local/opt/llvm/bin/lld --version
                   lld --version
