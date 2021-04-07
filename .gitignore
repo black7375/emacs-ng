@@ -303,4 +303,4 @@ nt/emacsclient.rc
 src/gdb.ini
 /var/
 
-rust_src/Cargo.toml
+# rust_src/Cargo.toml
