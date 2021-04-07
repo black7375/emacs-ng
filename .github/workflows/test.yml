@@ -55,6 +55,7 @@ jobs:
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
 
+                  # https://afnan.io/posts/2018-10-01-using-the-latest-llvm-release-on-macos/
                   export PATH="/usr/local/opt/llvm/bin:$PATH"
                   export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
                   export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
@@ -98,7 +99,7 @@ jobs:
                   # Debug Flags
                   # echo "Debug Process"
                   export RUSTFLAGS="-Dwarnings -Zshare-generics=y -Cdebuginfo=1 -Clink-arg=-fuse-ld=lld"
-                  export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
+                  # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
                   export CFLAGS="-O0 -g"
                   export CXXFLAGS="-O0 -g"
                   export CARGO_FLAGS="-Copt-level=0"
