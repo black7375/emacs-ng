@@ -58,6 +58,8 @@ jobs:
                   ls
                   export PATH="/usr/local/opt/llvm/bin:$PATH"
                   # https://steipete.com/posts/zld-a-faster-linker/
+                  /usr/local/opt/llvm/bin/lld --version
+                  lld --version
                   export AR="/usr/local/opt/llvm/bin/llvm-ar"
                   export AS="/usr/local/opt/llvm/bin/llvm-as"
                   export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
@@ -74,6 +76,7 @@ jobs:
               run: |
                   export CARGO_INCREMENTAL=0
                   export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+
                   # which clang
                   # which clang++
                   # which lld
@@ -81,7 +84,6 @@ jobs:
                   # echo "CC: $CC"
                   # echo "LD: $LD"
 
-                  which lld
                   # Compile with clang
                   echo "Compile with clang"
                   export CC="clang"
