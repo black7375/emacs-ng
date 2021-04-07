@@ -59,8 +59,35 @@ jobs:
               run: |
                   export CARGO_INCREMENTAL=0
                   export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-                  ./autogen.sh && RUSTFLAGS="-Dwarnings" WERROR_CFLAGS='-Werror -Wno-error=deprecated-declarations' CFLAGS=' -g' CXXFLAGS=' -g'
-                  ./configure --enable-checking=glyphs
+                  which clang
+                  which clang++
+                  which lld
+                  ./autogen.sh
+                  echo "CC: $CC"
+                  echo "LD: $LD"
+
+                  # Compile with clang
+                  export CC="clang"
+                  export CXX="clang++"
+                  export CPP="clang -E"
+                  export LD="lld"
+                  export AR="llavm-ar"
+                  export AS="llvm-as"
+                  export CCFLAGS+=" -fuse-ld=lld"
+                  export CXXFLAGS+=" -fuse-ld=lld"
+                  echo "CC: $CC"
+                  echo "LD: $LD"
+
+                  # Debug Flags
+                  export RUSTFLAGS="-Dwarnings"
+                  export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
+                  export CFLAGS=" -O0 -g"
+                  export CXXFLAGS=" -g"
+
+                  ./configure --enable-checking=glyphs --enable-rust-debug
+                  echo "CC: $CC"
+                  echo "LD: $LD"
+                  echo "nproc: $((`nproc`+1))"
                   # make -j$((`nproc`+1)) lib
                   # make -j$((`nproc`+1)) lib-src
                   make -j$((`nproc`+1)) src
