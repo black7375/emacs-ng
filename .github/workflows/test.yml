@@ -26,7 +26,7 @@ jobs:
                     ~/.cargo/registry/cache
                     ~/.cargo/git
                     ./rust_src/target
-                  key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}
+                  key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-test0
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -85,15 +85,18 @@ jobs:
 
                   # Debug Flags
                   # echo "Debug Process"
-                  # export RUSTFLAGS="-Dwarnings"
+                  # export RUSTFLAGS="-Dwarnings -Z no-trans"
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
                   # export CFLAGS=" -O0 -g"
                   # export CXXFLAGS=" -g"
+                  # export CARGO_FLAGS=" -C opt-level=0"
 
                   echo "Configure Process"
                   ./configure --enable-checking=glyphs --enable-rust-debug
+                  # --enable-autodepend
                   # echo "CC: $CC"
                   # echo "LD: $LD"
+                  echo "$RUSTFLAGS"
                   echo "nproc: $((`nproc`+1))"
                   make -j$((`nproc`+1)) src
 
