@@ -39,6 +39,7 @@ jobs:
                   # build-essential
 
                   export AR="llvm-ar"
+                  export RANLIB="llvm-ranlib"
 
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
@@ -74,6 +75,8 @@ jobs:
                   # echo "CC: $CC"
                   # echo "LD: $LD"
 
+                  which lld
+                  which llvm-as
                   # Compile with clang
                   echo "Compile with clang"
                   export CC="clang"
@@ -81,7 +84,6 @@ jobs:
                   export CPP="clang -E"
                   export LD="lld"
                   export AS="llvm-as"
-                  export RANLIB="llvm-ranlib"
                   export CCFLAGS+=" -fuse-ld=lld"
                   export CXXFLAGS+=" -fuse-ld=lld"
                   # echo "CC: $CC"
