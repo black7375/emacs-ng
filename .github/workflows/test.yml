@@ -51,25 +51,36 @@ jobs:
               id: mac-deps
               if: runner.os == 'macOS'
               run: |
-                  brew install gnutls texinfo automake autoconf llvm
+                  brew install gnutls texinfo automake autoconf llvm michaeleisel/zld/zld
                   # llvm --with-clang --with-lld
                   # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
 
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
 
+                  which zld
                   # https://afnan.io/posts/2018-10-01-using-the-latest-llvm-release-on-macos/
                   # https://steipete.com/posts/zld-a-faster-linker/
                   export PATH="/usr/local/opt/llvm/bin:$PATH"
                   export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
                   export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
-                  export LD="/usr/local/opt/llvm/bin/lld"
+                  export LD="/usr/local/bin/zld"
                   export AR="/usr/local/opt/llvm/bin/llvm-ar"
                   export AS="/usr/local/opt/llvm/bin/llvm-as"
                   export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  export CCFLAGS=" -fuse-ld=/usr/local/opt/llvm/bin/lld"
-                  export CXXFLAGS=" -fuse-ld=/usr/local/opt/llvm/bin/lld"
-                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=/usr/local/opt/llvm/bin/lld"
+                  export CCFLAGS=" -fuse-ld=/usr/local/bin/zld"
+                  export CXXFLAGS=" -fuse-ld=/usr/local/local/bin/zld"
+                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=/usr/local/bin/zld"
+                  OTHER_LDFLAGS=" -fuse-ld=/usr/local/bin/zld"
+                  echo "::set-output name=date::$(/bin/date)"
+
+            - uses: actions/cache@v2
+              with:
+                  path: /tmp/zld-*
+                  key: ${{ runner.OS }}-build-zld-${{ steps.mac-deps.outputs.date }}
+                  restore-keys:
+                      - ${{ runner.OS }}-build-zld-${{ steps.mac-deps.outputs.date }}
+                      - ${{ runner.OS }}-build-zld-
 
             - name: rustfmt
               run: |
