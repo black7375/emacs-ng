@@ -38,9 +38,12 @@ jobs:
                   sudo apt install -y texinfo libx11-dev libxpm-dev libjpeg-dev libpng-dev libgif-dev libtiff-dev libgtk2.0-dev libncurses-dev automake autoconf libgnutls28-dev zlib1g-dev libgccjit-9-dev clang llvm lld make
                   # build-essential
 
+                  export LD="lld"
                   export AR="llvm-ar"
                   export AS="llvm-as"
                   export RANLIB="llvm-ranlib"
+                  export CCFLAGS+=" -fuse-ld=lld"
+                  export CXXFLAGS+=" -fuse-ld=lld"
 
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
@@ -52,19 +55,17 @@ jobs:
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
 
-                  cd /usr/local/opt/llvm/bin
-                  ls
                   export PATH="/usr/local/opt/llvm/bin:$PATH"
-                  echo $PATH
                   export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
                   export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
-                  echo $CPLUS_INCLUDE_PATH
-                  # https://steipete.com/posts/zld-a-faster-linker/
-                  /usr/local/opt/llvm/bin/lld --version
-                  lld --version
+                  export LD="/usr/local/opt/llvm/bin/lld"
                   export AR="/usr/local/opt/llvm/bin/llvm-ar"
                   export AS="/usr/local/opt/llvm/bin/llvm-as"
                   export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
+                  export CCFLAGS+=" -fuse-ld=/usr/local/opt/llvm/bin/lld"
+                  export CXXFLAGS+=" -fuse-ld=/usr/local/opt/llvm/bin/lld"
+
+                  # https://steipete.com/posts/zld-a-faster-linker/
 
             - name: rustfmt
               run: |
@@ -91,9 +92,6 @@ jobs:
                   export CC="clang"
                   export CXX="clang++"
                   export CPP="clang -E"
-                  export LD="lld"
-                  export CCFLAGS+=" -fuse-ld=lld"
-                  export CXXFLAGS+=" -fuse-ld=lld"
                   # echo "CC: $CC"
                   # echo "LD: $LD"
 
