@@ -67,6 +67,7 @@ jobs:
                   echo "LD: $LD"
 
                   # Compile with clang
+                  echo "Compile with clang"
                   export CC="clang"
                   export CXX="clang++"
                   export CPP="clang -E"
@@ -79,20 +80,18 @@ jobs:
                   echo "LD: $LD"
 
                   # Debug Flags
+                  echo "Debug Process"
                   export RUSTFLAGS="-Dwarnings"
                   export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
                   export CFLAGS=" -O0 -g"
                   export CXXFLAGS=" -g"
 
+                  echo "Configure Process"
                   ./configure --enable-checking=glyphs --enable-rust-debug
                   echo "CC: $CC"
                   echo "LD: $LD"
                   echo "nproc: $((`nproc`+1))"
-                  # make -j$((`nproc`+1)) lib
-                  # make -j$((`nproc`+1)) lib-src
                   make -j$((`nproc`+1)) src
-                  # make -j$((`nproc`+1)) lisp
-                  # make -j$((`nproc`+1)) info
 
             - name: js fmt
               run: |
