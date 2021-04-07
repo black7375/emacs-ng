@@ -22,11 +22,10 @@ jobs:
               uses: actions/cache@v2
               with:
                   path: |
-                    ~/.cargo/registry/index
                     ~/.cargo/registry/cache
                     ~/.cargo/git
                     ./rust_src/target
-                  key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-test1
+                  key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-test2
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
