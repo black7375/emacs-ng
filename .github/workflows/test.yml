@@ -25,7 +25,7 @@ jobs:
                     ~/.cargo/registry/cache
                     ~/.cargo/git
                     ./rust_src/target
-                  key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-test2
+                  key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-test3
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -55,10 +55,9 @@ jobs:
                   alias nproc="sysctl -n hw.logicalcpu"
 
                   cd /usr/local/opt/llvm/bin
-                  ls -ll
+                  ls
                   export PATH="/usr/local/opt/llvm/bin:$PATH"
                   # https://steipete.com/posts/zld-a-faster-linker/
-                  ar --version
 
             - name: rustfmt
               run: |
