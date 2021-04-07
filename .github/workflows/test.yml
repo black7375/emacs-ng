@@ -96,7 +96,6 @@ jobs:
                   # --enable-autodepend
                   # echo "CC: $CC"
                   # echo "LD: $LD"
-                  echo "$RUSTFLAGS"
                   echo "nproc: $((`nproc`+1))"
                   make -j$((`nproc`+1)) src
 
