@@ -107,7 +107,8 @@ jobs:
                   export CXXFLAGS="-O0 -g"
 
                   echo "Configure Process"
-                  ./configure --enable-checking=glyphs --enable-rust-debug --enable-autodepend
+                  ./configure --enable-checking=glyphs --enable-rust-debug
+                  # --enable-autodepend
                   # echo "CC: $CC"
                   # echo "LD: $LD"
                   echo "nproc: $((`nproc`+1))"
