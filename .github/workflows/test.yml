@@ -58,6 +58,7 @@ jobs:
                   echo $PATH
                   export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
                   export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
+                  echo $CPLUS_INCLUDE_PATH
                   # https://steipete.com/posts/zld-a-faster-linker/
                   /usr/local/opt/llvm/bin/lld --version
                   lld --version
