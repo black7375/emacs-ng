@@ -98,7 +98,8 @@ jobs:
 
                   # Debug Flags
                   # echo "Debug Process"
-                  export RUSTFLAGS="-Dwarnings -Zshare-generics=y -Copt-level=0 -Cdebuginfo=1 -Clink-arg=-fuse-ld=lld"
+                  export RUSTFLAGS="-Zshare-generics=y -Copt-level=0 -Cdebuginfo=1 -Clink-arg=-fuse-ld=lld"
+                  # -Dwarnings
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
                   export CFLAGS="-O0 -g"
                   export CXXFLAGS="-O0 -g"
