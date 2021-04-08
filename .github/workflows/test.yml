@@ -25,9 +25,9 @@ jobs:
               uses: actions/cache@v2
               with:
                   path: |
-                    ~/.cargo/registry/cache
-                    ~/.cargo/git
-                    ./rust_src/target
+                      ~/.cargo/registry/cache
+                      ~/.cargo/git
+                      ./rust_src/target
                   key: ${{ runner.os }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
                       ${{ runner.os }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
