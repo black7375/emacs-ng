@@ -18,7 +18,7 @@ jobs:
                   mkdir $HOME/bin
                   cd $HOME/bin
                   env HOMEBREW_NO_AUTO_UPDATE=1
-                  brew install gnutls texinfo automake autoconf llvm grep
+                  brew install gnutls texinfo automake autoconf llvm grep curl
                   # llvm --with-clang --with-lld
                   # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
                   # michaeleisel/zld/zld
