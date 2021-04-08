@@ -37,7 +37,7 @@ jobs:
             - name: Install dependencies on Linux
               if: runner.os == 'Linux'
               run: |
-                sudo apt install -y libxpm-dev libgtk2.0-dev libgif-dev libncurses-dev libgnutls28-dev clang llvm lld
+                sudo apt install -y libxpm-dev libgtk2.0-dev libgif-dev libncurses-dev libgnutls28-dev clang llvm lld ninja
                   # automake autoconf texinfo libjpeg-dev libpng-dev libtiff-dev libx11-dev  zlib1g-dev
                   # build-essential libgccjit-9-dev
 
@@ -52,9 +52,10 @@ jobs:
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
               run: |
-                  brew install texinfo automake grep libgccjit
+                  brew install texinfo automake grep ninja
                   # already intalled: gnutls autoconf llvm
                   # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
+                  # libgccjit
 
                   ## Install zld
                   # brew insall michaeleisel/zld/zld
