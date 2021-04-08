@@ -11,6 +11,17 @@ jobs:
                 os: [ubuntu-latest, macos-latest]
 
         steps:
+            - name: Update dependencies on macOS
+              if: runner.os == 'macOS'
+              run: |
+                cd "$(brew --repository)"
+                # /Library/Taps
+                ls
+                # cd hombrew
+                # ls
+                # cd hombrew-core/Formular
+                # ls
+
             - uses: actions/checkout@v2
 
             - name: rust setup
@@ -47,17 +58,6 @@ jobs:
                   export CCFLAGS=" -fuse-ld=lld"
                   export CXXFLAGS=" -fuse-ld=lld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
-
-            - name: Update dependencies on macOS
-              if: runner.os == 'macOS'
-              run: |
-                brew update --preinstall
-                cd "$(brew --repository)/Library/Taps"
-                ls
-                cd hombrew
-                ls
-                cd hombrew-core/Formular
-                ls
 
             - name: zld cache(for mac)
               if: runner.os == 'macOS'
