@@ -51,7 +51,7 @@ jobs:
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
               run: |
-                  brew install texinfo automake grep
+                  brew install texinfo automake grep libgccjit
                   # already intalled: gnutls autoconf llvm
                   # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
 
@@ -75,7 +75,8 @@ jobs:
                   export CCFLAGS=" -fuse-ld=$HOME/bin/zld"
                   export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld"
-                  OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
 
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
@@ -96,7 +97,7 @@ jobs:
                   # Configure $PATH: Executables are installed to $HOME/bin
                   export PATH="$HOME/bin:$PATH"
 
-                  ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings --without-native-compilation
+                  ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings --with-native-compilation
                   admin/format-rust.sh
 
             - name: build
