@@ -18,6 +18,7 @@ jobs:
               run: |
                   rustup install $(cat rust-toolchain)
                   rustup component add rustfmt-preview
+                  echo "::set-output name=week::$(/bin/date -u '+%Yy %Mm %Ww')"
                   echo "::set-output name=date::$(/bin/date)"
 
             - name: rust cache
@@ -27,7 +28,11 @@ jobs:
                     ~/.cargo/registry/cache
                     ~/.cargo/git
                     ./rust_src/target
-                  key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-test8
+                  key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-test
+                  restore-keys: |
+                      ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-test
+                      ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-build-
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
