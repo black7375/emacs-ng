@@ -28,11 +28,11 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./rust_src/target
-                  key: ${{ runner.os }}-RLinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                  key: ${{ runner.os }}-RFLinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-RLinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-Rlinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-Rlinkerrust
+                      ${{ runner.os }}-RFLinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-RFlinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-RFlinkerrust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -85,8 +85,7 @@ jobs:
                   # export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
                   export CCFLAGS=" -fuse-ld=$HOME/bin/zld"
                   export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
-                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld"
-                  # -Csplit-debuginfo=unpacked
+                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked"
                   export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
                   # export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
 
@@ -125,7 +124,8 @@ jobs:
 
                   # Other Flags
                   export CARGO_INCREMENTAL=0
-                  # export RUSTFLAGS="-Zshare-generics=y -Copt-level=1 -Cdebuginfo=1 -Ctarget-cpu=native $RUSTFLAGS"
+                  export RUSTFLAGS="-Zshare-generics=y -Cdebuginfo=1 $RUSTFLAGS"
+                  # -Copt-level=1 -Ctarget-cpu=native
                   # RUSTFLAGS -Dwarnings
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
                   # export CFLAGS="-O1 -g1 -march=native"
