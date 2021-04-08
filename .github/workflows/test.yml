@@ -14,10 +14,11 @@ jobs:
             - uses: actions/checkout@v2
 
             - name: rust setup
+              id: rust-setup
               run: |
                   rustup install $(cat rust-toolchain)
                   rustup component add rustfmt-preview
-                  gcc --version
+                  echo "::set-output name=date::$(/bin/date)"
 
             - name: rust cache
               uses: actions/cache@v2
@@ -47,10 +48,31 @@ jobs:
                   export CXXFLAGS=" -fuse-ld=lld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
 
-            - name: Install dependencies on macOS
-              id: mac-deps
+            - name: Update dependencies on macOS
               if: runner.os == 'macOS'
               run: |
+                brew update --preinstall
+                cd "$(brew --repository)/Library/Taps"
+                ls
+                cd hombrew
+                ls
+                cd hombrew-core/Formular
+                ls
+
+            - name: zld cache(for mac)
+              if: runner.os == 'macOS'
+              uses: actions/cache@v2
+              with:
+                  path: /tmp/zld-*
+                  key: ${{ runner.OS }}-build-zld-${{ steps.rust-setup.outputs.date }}
+                  restore-keys: |
+                      ${{ runner.OS }}-build-zld-${{ steps.rust-setup.outputs.date }}
+                      ${{ runner.OS }}-build-zld-
+
+            - name: Install dependencies on macOS
+              if: runner.os == 'macOS'
+              run: |
+                  env HOMEBREW_NO_AUTO_UPDATE=1
                   brew install gnutls texinfo automake autoconf llvm michaeleisel/zld/zld
                   # llvm --with-clang --with-lld
                   # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
@@ -72,17 +94,6 @@ jobs:
                   export CXXFLAGS=" -fuse-ld=/usr/local/local/bin/zld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=/usr/local/bin/zld"
                   OTHER_LDFLAGS=" -fuse-ld=/usr/local/bin/zld"
-                  echo "::set-output name=date::$(/bin/date)"
-
-            - name: zld cache(for mac)
-              if: runner.os == 'macOS'
-              uses: actions/cache@v2
-              with:
-                  path: /tmp/zld-*
-                  key: ${{ runner.OS }}-build-zld-${{ steps.mac-deps.outputs.date }}
-                  restore-keys: |
-                      ${{ runner.OS }}-build-zld-${{ steps.mac-deps.outputs.date }}
-                      ${{ runner.OS }}-build-zld-
 
             - name: rustfmt
               run: |
