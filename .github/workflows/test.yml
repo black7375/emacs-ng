@@ -18,7 +18,7 @@ jobs:
               run: |
                   rustup install $(cat rust-toolchain)
                   rustup component add rustfmt-preview
-                  echo "::set-output name=week::$(/bin/date -u '+%Yy%Mm%Ww')"
+                  echo "::set-output name=week::$(/bin/date -u '+%Yy_%mm_%Ww')"
                   echo "::set-output name=date::$(/bin/date)"
 
             - name: rust cache
