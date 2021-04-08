@@ -84,6 +84,7 @@ jobs:
                   export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
                   # export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
 
+                  ## nproc for mac
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
 
@@ -108,24 +109,24 @@ jobs:
 
             - name: build
               run: |
-                  export CARGO_INCREMENTAL=0
+                  ## Set env
+                  # Path Set
                   export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
 
                   # Compile with clang
-                  echo "Compile with clang"
                   export CC="clang"
                   export CXX="clang++"
                   export CPP="clang -E"
 
-                  # Debug Flags
-                  # echo "Debug Process"
+                  # Other Flags
+                  export CARGO_INCREMENTAL=0
                   export RUSTFLAGS="-Zshare-generics=y -Copt-level=2 -Cdebuginfo=1 -Ctarget-cpu=native $RUSTFLAGS"
-                  # -Dwarnings
+                  # RUSTFLAGS -Dwarnings
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
                   export CFLAGS="-O2 -g1 -march=native"
                   export CXXFLAGS="-O2 -g1 -march=native"
 
-                  echo "Configure Process"
+                  ## Build
                   ./configure --enable-checking=glyphs --enable-rust-debug
                   # --enable-autodepend
                   echo "nproc: $((`nproc`+1))"
