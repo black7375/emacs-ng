@@ -28,11 +28,11 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./rust_src/target
-                  key: ${{ runner.os }}-O1rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                  key: ${{ runner.os }}-O2rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-O1rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-O1rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-O1rust
+                      ${{ runner.os }}-O2rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-O2rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-O2rust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -125,11 +125,11 @@ jobs:
 
                   # Other Flags
                   export CARGO_INCREMENTAL=0
-                  export RUSTFLAGS="-Zshare-generics=y -Copt-level=1 -Cdebuginfo=1 -Ctarget-cpu=native $RUSTFLAGS"
+                  export RUSTFLAGS="-Zshare-generics=y -Copt-level=2 -Cdebuginfo=1 -Ctarget-cpu=native $RUSTFLAGS"
                   # RUSTFLAGS -Dwarnings
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
-                  export CFLAGS="-O1 -g1 -march=native"
-                  export CXXFLAGS="-O1 -g1 -march=native"
+                  export CFLAGS="-O2 -g1 -march=native"
+                  export CXXFLAGS="-O2 -g1 -march=native"
 
                   ## Build
                   ./configure --enable-checking=glyphs --enable-rust-debug
