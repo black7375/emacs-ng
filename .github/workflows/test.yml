@@ -28,11 +28,11 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./rust_src/target
-                  key: ${{ runner.os }}-Linkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                  key: ${{ runner.os }}-RLinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-Linkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-linkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-linkerrust
+                      ${{ runner.os }}-RLinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-Rlinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-Rlinkerrust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -55,7 +55,7 @@ jobs:
                   # export RANLIB="llvm-ranlib"
                   export CCFLAGS=" -fuse-ld=lld"
                   export CXXFLAGS=" -fuse-ld=lld"
-                  # export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
+                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
 
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
@@ -85,7 +85,8 @@ jobs:
                   # export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
                   export CCFLAGS=" -fuse-ld=$HOME/bin/zld"
                   export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
-                  # export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked"
+                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld"
+                  # -Csplit-debuginfo=unpacked
                   export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
                   # export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
 
