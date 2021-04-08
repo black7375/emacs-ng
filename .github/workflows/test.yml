@@ -18,15 +18,20 @@ jobs:
                   mkdir $HOME/bin
                   cd $HOME/bin
                   env HOMEBREW_NO_AUTO_UPDATE=1
-                  brew install gnutls texinfo automake autoconf llvm grep curl
+                  brew install gnutls texinfo automake autoconf llvm grep
                   # llvm --with-clang --with-lld
                   # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
                   # michaeleisel/zld/zld
                   # /usr/local/bin/zld
+                  echo "=========================1"
                   ZLD_REPO_RELEASE="michaeleisel/zld/releases"
+                  echo "=========================2"
                   ZLD_LATEST="$(curl --silent https://api.github.com/repos/${ZLD_REPO_RELEASE}/latest | /usr/local/opt/grep/libexec/gnubin/grep -Po '"tag_name": "\K.*?(?=")')"
+                  echo "=========================3"
                   curl -fLO https://github.com/${ZLD_REPO_RELEASE}/download/${ZLD_LATEST}/zld.tar.xz
+                  echo "=========================4"
                   ls
+                  echo "=========================5"
                   gtar -xf --verbose zld.tar.xz
                   pwd
 
