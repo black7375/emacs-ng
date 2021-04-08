@@ -30,9 +30,9 @@ jobs:
                     ./rust_src/target
                   key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-test
                   restore-keys: |
-                      ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-test
-                      ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-build-
+                      ${{ runner.os }}-build-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-test
+                      ${{ runner.os }}-build-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-build-rust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1

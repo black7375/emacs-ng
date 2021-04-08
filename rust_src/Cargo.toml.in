@@ -71,9 +71,9 @@ lto = true
 # to Deno inclusion
 opt-level = 'z' # Optimize for size
 
-# [llvm]
-# ninja = true
-# targets = "x86"
+[llvm]
+ninja = true
+targets = "x86"
 
 [features]
 default = [
