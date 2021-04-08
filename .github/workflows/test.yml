@@ -74,7 +74,8 @@ jobs:
                   OTHER_LDFLAGS=" -fuse-ld=/usr/local/bin/zld"
                   echo "::set-output name=date::$(/bin/date)"
 
-            - uses: actions/cache@v2
+            - name: zld cache(for mac)
+              uses: actions/cache@v2
               with:
                   path: /tmp/zld-*
                   key: ${{ runner.OS }}-build-zld-${{ steps.mac-deps.outputs.date }}
