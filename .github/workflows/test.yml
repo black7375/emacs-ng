@@ -28,11 +28,11 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./rust_src/target
-                  key: ${{ runner.os }}-Clangrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                  key: ${{ runner.os }}-Linkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-Clangrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-Clangrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-Clangrust
+                      ${{ runner.os }}-Linkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-linkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-linkerrust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -49,12 +49,12 @@ jobs:
                   # When use gcc: build-essential
 
                   ## Setup Env
-                  # export LD="lld"
+                  export LD="lld"
                   # export AR="llvm-ar"
                   # export AS="llvm-as"
                   # export RANLIB="llvm-ranlib"
-                  # export CCFLAGS=" -fuse-ld=lld"
-                  # export CXXFLAGS=" -fuse-ld=lld"
+                  export CCFLAGS=" -fuse-ld=lld"
+                  export CXXFLAGS=" -fuse-ld=lld"
                   # export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
 
             - name: Install dependencies on macOS
@@ -78,15 +78,15 @@ jobs:
 
                   # export PATH="/usr/local/opt/llvm/bin:$PATH"
                   # export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
-                  # export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
-                  # export LD="$HOME/bin/zld"
+                  export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
+                  export LD="$HOME/bin/zld"
                   # export AR="/usr/local/opt/llvm/bin/llvm-ar"
                   # export AS="/usr/local/opt/llvm/bin/llvm-as"
                   # export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  # export CCFLAGS=" -fuse-ld=$HOME/bin/zld"
-                  # export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  export CCFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
                   # export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked"
-                  # export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
                   # export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
 
                   ## nproc for mac
