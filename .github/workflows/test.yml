@@ -11,6 +11,8 @@ jobs:
                 os: [ubuntu-latest, macos-latest]
 
         steps:
+            - uses: actions/checkout@v2
+
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
               run: |
@@ -25,10 +27,10 @@ jobs:
                   curl -fLO https://github.com/${ZLD_REPO_RELEASE}/download/${ZLD_LATEST}/zld.tar.xz
                   ls
                   gtar -xf --verbose zld.tar.xz
+                  pwd
 
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
-                  pwd
 
                   # https://afnan.io/posts/2018-10-01-using-the-latest-llvm-release-on-macos/
                   # https://steipete.com/posts/zld-a-faster-linker/
@@ -43,8 +45,6 @@ jobs:
                   export CXXFLAGS=" -fuse-ld=./zld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=./zld"
                   OTHER_LDFLAGS=" -fuse-ld=./zld"
-
-            - uses: actions/checkout@v2
 
             - name: rust setup
               id: rust-setup
