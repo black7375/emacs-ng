@@ -13,6 +13,39 @@ jobs:
         steps:
             - uses: actions/checkout@v2
 
+            - name: Install dependencies on macOS
+              if: runner.os == 'macOS'
+              run: |
+                  env HOMEBREW_NO_AUTO_UPDATE=1
+                  brew install gnutls texinfo automake autoconf llvm grep
+                  # llvm --with-clang --with-lld
+                  # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
+                  # michaeleisel/zld/zld
+                  # /usr/local/bin/zld
+                  ZLD_REPO_RELEASE="michaeleisel/zld/releases"
+                  ZLD_LATEST="$(curl --silent https://api.github.com/repos/${ZLD_REPO_RELEASE}/latest | /usr/local/opt/grep/libexec/gnubin/grep -Po '"tag_name": "\K.*?(?=")')"
+                  curl -fLO https://github.com/${ZLD_REPO_RELEASE}/download/${ZLD_LATEST}/zld.tar.xz
+                  tar -xf zld.tar.xz
+                  alias zld="./zld"
+
+                  # https://github.com/memkind/memkind/issues/33
+                  alias nproc="sysctl -n hw.logicalcpu"
+
+                  which zld
+                  # https://afnan.io/posts/2018-10-01-using-the-latest-llvm-release-on-macos/
+                  # https://steipete.com/posts/zld-a-faster-linker/
+                  export PATH="/usr/local/opt/llvm/bin:$PATH"
+                  export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
+                  export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
+                  export LD="/usr/local/bin/zld"
+                  export AR="/usr/local/opt/llvm/bin/llvm-ar"
+                  export AS="/usr/local/opt/llvm/bin/llvm-as"
+                  export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
+                  export CCFLAGS=" -fuse-ld=zld"
+                  export CXXFLAGS=" -fuse-ld=zld"
+                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=zld"
+                  OTHER_LDFLAGS=" -fuse-ld=zld"
+
             - name: rust setup
               id: rust-setup
               run: |
@@ -58,39 +91,6 @@ jobs:
                       ${{ runner.OS }}-build-zld-${{ steps.rust-setup.outputs.date }}
                       ${{ runner.OS }}-build-zld-
 
-            - name: Install dependencies on macOS
-              if: runner.os == 'macOS'
-              run: |
-                  env HOMEBREW_NO_AUTO_UPDATE=1
-                  brew uninstall grep
-                  brew install gnutls texinfo automake autoconf llvm grep
-                  # llvm --with-clang --with-lld
-                  # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
-                  # michaeleisel/zld/zld
-                  # /usr/local/bin/zld
-                  ZLD_REPO_RELEASE="michaeleisel/zld/releases"
-                  ZLD_LATEST="$(curl --silent https://api.github.com/repos/${ZLD_REPO_RELEASE}/latest | /usr/local/opt/grep/libexec/gnubin/grep -Po '"tag_name": "\K.*?(?=")')"
-                  curl -fLO https://github.com/${ZLD_REPO_RELEASE}/download/${ZLD_LATEST}/zld.tar.xz
-                  tar -xf zld.tar.xz
-                  alias zld="./zld"
-
-                  # https://github.com/memkind/memkind/issues/33
-                  alias nproc="sysctl -n hw.logicalcpu"
-
-                  which zld
-                  # https://afnan.io/posts/2018-10-01-using-the-latest-llvm-release-on-macos/
-                  # https://steipete.com/posts/zld-a-faster-linker/
-                  export PATH="/usr/local/opt/llvm/bin:$PATH"
-                  export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
-                  export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
-                  export LD="/usr/local/bin/zld"
-                  export AR="/usr/local/opt/llvm/bin/llvm-ar"
-                  export AS="/usr/local/opt/llvm/bin/llvm-as"
-                  export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  export CCFLAGS=" -fuse-ld=zld"
-                  export CXXFLAGS=" -fuse-ld=zld"
-                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=zld"
-                  OTHER_LDFLAGS=" -fuse-ld=zld"
 
             - name: rustfmt
               run: |
