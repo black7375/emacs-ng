@@ -12,7 +12,6 @@ jobs:
 
         steps:
             - uses: actions/checkout@v2
-
             - name: rust setup
               id: rust-setup
               run: |
