@@ -37,8 +37,8 @@ jobs:
             - name: Install dependencies on Linux
               if: runner.os == 'Linux'
               run: |
-                  sudo apt install -y libxpm-dev libgtk2.0-dev libncurses-dev libgnutls28-dev clang llvm lld
-                  # automake autoconf texinfo libjpeg-dev libpng-dev libgif-dev libtiff-dev libx11-dev  zlib1g-dev
+                sudo apt install -y libxpm-dev libgtk2.0-dev libgif-dev libncurses-dev libgnutls28-dev clang llvm lld
+                  # automake autoconf texinfo libjpeg-dev libpng-dev libtiff-dev libx11-dev  zlib1g-dev
                   # build-essential libgccjit-9-dev
 
                   export LD="lld"
