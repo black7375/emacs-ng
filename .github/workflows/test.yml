@@ -103,7 +103,6 @@ jobs:
                       ${{ runner.OS }}-build-zld-${{ steps.rust-setup.outputs.date }}
                       ${{ runner.OS }}-build-zld-
 
-
             - name: rustfmt
               run: |
                   # Configure $PATH: Executables are installed to $HOME/bin
