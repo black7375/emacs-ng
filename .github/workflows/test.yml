@@ -78,9 +78,9 @@ jobs:
               with:
                   path: /tmp/zld-*
                   key: ${{ runner.OS }}-build-zld-${{ steps.mac-deps.outputs.date }}
-                  restore-keys:
-                      - ${{ runner.OS }}-build-zld-${{ steps.mac-deps.outputs.date }}
-                      - ${{ runner.OS }}-build-zld-
+                  restore-keys: |
+                      ${{ runner.OS }}-build-zld-${{ steps.mac-deps.outputs.date }}
+                      ${{ runner.OS }}-build-zld-
 
             - name: rustfmt
               run: |
