@@ -11,11 +11,11 @@ jobs:
                 os: [ubuntu-latest, macos-latest]
 
         steps:
-            - uses: actions/checkout@v2
 
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
               run: |
+                  cd $HOME/bin
                   env HOMEBREW_NO_AUTO_UPDATE=1
                   brew install gnutls texinfo automake autoconf llvm grep
                   # llvm --with-clang --with-lld
@@ -37,15 +37,16 @@ jobs:
                   export PATH="/usr/local/opt/llvm/bin:$PATH"
                   export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
                   export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
-                  export LD="/usr/local/bin/zld"
+                  export LD="$HOME/bin/zld"
                   export AR="/usr/local/opt/llvm/bin/llvm-ar"
                   export AS="/usr/local/opt/llvm/bin/llvm-as"
                   export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  export CCFLAGS=" -fuse-ld=./zld"
-                  export CXXFLAGS=" -fuse-ld=./zld"
-                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=./zld"
-                  OTHER_LDFLAGS=" -fuse-ld=./zld"
+                  export CCFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld"
+                  OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
 
+            - uses: actions/checkout@v2
             - name: rust setup
               id: rust-setup
               run: |
