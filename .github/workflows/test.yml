@@ -11,45 +11,8 @@ jobs:
                 os: [ubuntu-latest, macos-latest]
 
         steps:
-
-            - name: Install dependencies on macOS
-              if: runner.os == 'macOS'
-              run: |
-                  mkdir $HOME/bin
-                  cd $HOME/bin
-                  echo "=========================1"
-                  curl -fLO https://github.com/michaeleisel/zld/releases/latest/download/zld.tar.xz
-                  echo "=========================2"
-                  gtar --verbose -xf ./zld.tar.xz
-                  echo "=========================3"
-                  pwd
-                  env HOMEBREW_NO_AUTO_UPDATE=1
-                  brew install gnutls texinfo automake autoconf llvm grep
-                  # llvm --with-clang --with-lld
-                  # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
-                  # michaeleisel/zld/zld
-                  # /usr/local/bin/zld
-                  echo "=========================4"
-                  ls
-                  echo "=========================5"
-                  # https://github.com/memkind/memkind/issues/33
-                  alias nproc="sysctl -n hw.logicalcpu"
-
-                  # https://afnan.io/posts/2018-10-01-using-the-latest-llvm-release-on-macos/
-                  # https://steipete.com/posts/zld-a-faster-linker/
-                  export PATH="/usr/local/opt/llvm/bin:$PATH"
-                  export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
-                  export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
-                  export LD="$HOME/bin/zld"
-                  export AR="/usr/local/opt/llvm/bin/llvm-ar"
-                  export AS="/usr/local/opt/llvm/bin/llvm-as"
-                  export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  export CCFLAGS=" -fuse-ld=$HOME/bin/zld"
-                  export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
-                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld"
-                  OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
-
             - uses: actions/checkout@v2
+
             - name: rust setup
               id: rust-setup
               run: |
@@ -85,6 +48,38 @@ jobs:
                   export CXXFLAGS=" -fuse-ld=lld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
 
+            - name: Install dependencies on macOS
+              if: runner.os == 'macOS'
+              run: |
+                  brew install texinfo automake grep
+                  # already intalled: gnutls autoconf llvm
+                  # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
+
+                  ## Install zld
+                  # brew insall michaeleisel/zld/zld
+                  # /usr/local/bin/zld
+                  # https://afnan.io/posts/2018-10-01-using-the-latest-llvm-release-on-macos/
+                  # https://steipete.com/posts/zld-a-faster-linker/
+                  mkdir $HOME/bin
+                  cd $HOME/bin
+                  curl -fLO https://github.com/michaeleisel/zld/releases/latest/download/zld.tar.xz
+                  gtar --verbose -xf ./zld.tar.xz
+
+                  export PATH="/usr/local/opt/llvm/bin:$PATH"
+                  export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
+                  export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
+                  export LD="$HOME/bin/zld"
+                  export AR="/usr/local/opt/llvm/bin/llvm-ar"
+                  export AS="/usr/local/opt/llvm/bin/llvm-as"
+                  export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
+                  export CCFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld"
+                  OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
+
+                  # https://github.com/memkind/memkind/issues/33
+                  alias nproc="sysctl -n hw.logicalcpu"
+
             - name: zld cache(for mac)
               if: runner.os == 'macOS'
               uses: actions/cache@v2
@@ -101,7 +96,7 @@ jobs:
                   # Configure $PATH: Executables are installed to $HOME/bin
                   export PATH="$HOME/bin:$PATH"
 
-                  ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings --without-native-compilation
+                  # ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings --without-native-compilation
                   admin/format-rust.sh
 
             - name: build
@@ -109,20 +104,13 @@ jobs:
                   export CARGO_INCREMENTAL=0
                   export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
 
-                  # which clang
-                  # which clang++
-                  # which lld
                   ./autogen.sh
-                  # echo "CC: $CC"
-                  # echo "LD: $LD"
 
                   # Compile with clang
                   echo "Compile with clang"
                   export CC="clang"
                   export CXX="clang++"
                   export CPP="clang -E"
-                  # echo "CC: $CC"
-                  # echo "LD: $LD"
 
                   # Debug Flags
                   # echo "Debug Process"
@@ -135,8 +123,6 @@ jobs:
                   echo "Configure Process"
                   ./configure --enable-checking=glyphs --enable-rust-debug
                   # --enable-autodepend
-                  # echo "CC: $CC"
-                  # echo "LD: $LD"
                   echo "nproc: $((`nproc`+1))"
                   make -j$((`nproc`+1)) src
 
