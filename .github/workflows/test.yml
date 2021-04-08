@@ -20,7 +20,7 @@ jobs:
                   echo "=========================1"
                   curl -fLO https://github.com/michaeleisel/zld/releases/latest/download/zld.tar.xz
                   echo "=========================2"
-                  gtar -xf --verbose ./zld.tar.xz
+                  gtar --verbose -xf ./zld.tar.xz
                   echo "=========================3"
                   pwd
                   env HOMEBREW_NO_AUTO_UPDATE=1
