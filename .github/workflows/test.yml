@@ -78,6 +78,8 @@ jobs:
                   export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
                   export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
 
+                  cd /usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10
+                  ls
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
 
