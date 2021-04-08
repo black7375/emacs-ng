@@ -28,11 +28,12 @@ jobs:
                   echo "=========================2"
                   ZLD_LATEST="$(curl --silent https://api.github.com/repos/${ZLD_REPO_RELEASE}/latest | /usr/local/opt/grep/libexec/gnubin/grep -Po '"tag_name": "\K.*?(?=")')"
                   echo "=========================3"
+                  pwd
                   curl -fLO https://github.com/${ZLD_REPO_RELEASE}/download/${ZLD_LATEST}/zld.tar.xz
                   echo "=========================4"
                   ls
                   echo "=========================5"
-                  gtar -xf --verbose zld.tar.xz
+                  gtar -xf --verbose ./zld.tar.xz
                   pwd
 
                   # https://github.com/memkind/memkind/issues/33
