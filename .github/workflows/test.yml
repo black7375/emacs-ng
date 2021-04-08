@@ -23,7 +23,7 @@ jobs:
                   # michaeleisel/zld/zld
                   # /usr/local/bin/zld
                   ZLD_REPO_RELEASE="michaeleisel/zld/releases"
-                  ZLD_LATEST="$(curl --silent https://api.github.com/repos/${ZLD_REPO_RELEASE}/latest | ggrep -Po '"tag_name": "\K.*?(?=")')"
+                  ZLD_LATEST="$(curl --silent https://api.github.com/repos/${ZLD_REPO_RELEASE}/latest | /usr/local/opt/grep/libexec/gnubin/ggrep -Po '"tag_name": "\K.*?(?=")')"
                   curl -fLO https://github.com/${ZLD_REPO_RELEASE}/download/${ZLD_LATEST}/zld.tar.xz
                   tar -xf zld.tar.xz
                   alias zld="./zld"
