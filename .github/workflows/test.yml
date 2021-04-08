@@ -30,9 +30,9 @@ jobs:
                       ./rust_src/target
                   key: ${{ runner.os }}-O1rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-O1rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-O1rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-O1rust
+                      ${{ runner.os }}-Clangrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-Clangrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-Clangrust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -49,13 +49,13 @@ jobs:
                   # When use gcc: build-essential
 
                   ## Setup Env
-                  export LD="lld"
-                  export AR="llvm-ar"
-                  export AS="llvm-as"
-                  export RANLIB="llvm-ranlib"
-                  export CCFLAGS=" -fuse-ld=lld"
-                  export CXXFLAGS=" -fuse-ld=lld"
-                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
+                  # export LD="lld"
+                  # export AR="llvm-ar"
+                  # export AS="llvm-as"
+                  # export RANLIB="llvm-ranlib"
+                  # export CCFLAGS=" -fuse-ld=lld"
+                  # export CXXFLAGS=" -fuse-ld=lld"
+                  # export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
 
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
@@ -76,17 +76,17 @@ jobs:
                   curl -fLO https://github.com/michaeleisel/zld/releases/latest/download/zld.tar.xz
                   gtar --verbose -xf ./zld.tar.xz
 
-                  export PATH="/usr/local/opt/llvm/bin:$PATH"
-                  export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
-                  export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
-                  export LD="$HOME/bin/zld"
-                  export AR="/usr/local/opt/llvm/bin/llvm-ar"
-                  export AS="/usr/local/opt/llvm/bin/llvm-as"
-                  export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  export CCFLAGS=" -fuse-ld=$HOME/bin/zld"
-                  export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
-                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked"
-                  export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  # export PATH="/usr/local/opt/llvm/bin:$PATH"
+                  # export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
+                  # export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
+                  # export LD="$HOME/bin/zld"
+                  # export AR="/usr/local/opt/llvm/bin/llvm-ar"
+                  # export AS="/usr/local/opt/llvm/bin/llvm-as"
+                  # export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
+                  # export CCFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  # export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  # export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked"
+                  # export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
                   # export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
 
                   ## nproc for mac
@@ -125,11 +125,11 @@ jobs:
 
                   # Other Flags
                   export CARGO_INCREMENTAL=0
-                  export RUSTFLAGS="-Zshare-generics=y -Copt-level=1 -Cdebuginfo=1 -Ctarget-cpu=native $RUSTFLAGS"
+                  # export RUSTFLAGS="-Zshare-generics=y -Copt-level=1 -Cdebuginfo=1 -Ctarget-cpu=native $RUSTFLAGS"
                   # RUSTFLAGS -Dwarnings
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
-                  export CFLAGS="-O1 -g1 -march=native"
-                  export CXXFLAGS="-O1 -g1 -march=native"
+                  # export CFLAGS="-O1 -g1 -march=native"
+                  # export CXXFLAGS="-O1 -g1 -march=native"
 
                   ## Build
                   ./configure --enable-checking=glyphs --enable-rust-debug
