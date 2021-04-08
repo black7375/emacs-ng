@@ -26,7 +26,7 @@ jobs:
                     ~/.cargo/registry/cache
                     ~/.cargo/git
                     ./rust_src/target
-                  key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-test5
+                  key: ${{ runner.os }}-build-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-test6
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -113,11 +113,11 @@ jobs:
 
                   # Debug Flags
                   # echo "Debug Process"
-                  export RUSTFLAGS="-Zshare-generics=y -Copt-level=1 -Cdebuginfo=1 $RUSTFLAGS"
+                  export RUSTFLAGS="-Zshare-generics=y -Copt-level=2 -Cdebuginfo=1 $RUSTFLAGS"
                   # -Dwarnings
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
-                  export CFLAGS="-O1 -g"
-                  export CXXFLAGS="-O1 -g"
+                  export CFLAGS="-O2 -g"
+                  export CXXFLAGS="-O2 -g"
 
                   echo "Configure Process"
                   ./configure --enable-checking=glyphs --enable-rust-debug
