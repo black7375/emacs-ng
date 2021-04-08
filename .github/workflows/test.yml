@@ -14,8 +14,7 @@ jobs:
             - name: Update dependencies on macOS
               if: runner.os == 'macOS'
               run: |
-                cd "$(brew --repository)"
-                # /Library/Taps
+                cd "$(brew --repository)/Library/Taps"
                 ls
                 # cd hombrew
                 # ls
