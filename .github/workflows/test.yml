@@ -27,7 +27,8 @@ jobs:
                   curl -fLO https://github.com/${ZLD_REPO_RELEASE}/download/${ZLD_LATEST}/zld.tar.xz
                   brew reinstall gnu-tar
                   tar --version
-                  tar -xf zld.tar.xz
+                  gtar --version
+                  gtar -xf zld.tar.xz
                   alias zld="./zld"
 
                   # https://github.com/memkind/memkind/issues/33
