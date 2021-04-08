@@ -27,7 +27,7 @@ jobs:
                   ZLD_REPO_RELEASE="michaeleisel/zld/releases"
                   ZLD_LATEST="$(curl --silent https://api.github.com/repos/${ZLD_REPO_RELEASE}/latest | /usr/local/opt/grep/libexec/gnubin/grep -Po '"tag_name": "\K.*?(?=")')"
                   curl -fLO https://github.com/${ZLD_REPO_RELEASE}/download/${ZLD_LATEST}/zld.tar.xz
-                  gtar -xfv zld.tar.xz
+                  gtar -xf --verbose zld.tar.xz
 
                   # https://github.com/memkind/memkind/issues/33
                   alias nproc="sysctl -n hw.logicalcpu"
