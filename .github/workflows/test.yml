@@ -75,6 +75,7 @@ jobs:
                   echo "::set-output name=date::$(/bin/date)"
 
             - name: zld cache(for mac)
+              if: runner.os == 'macOS'
               uses: actions/cache@v2
               with:
                   path: /tmp/zld-*
