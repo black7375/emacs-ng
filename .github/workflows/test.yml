@@ -11,19 +11,15 @@ jobs:
                 os: [ubuntu-latest, macos-latest]
 
         steps:
-            - uses: actions/checkout@v2
-
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
               run: |
                   env HOMEBREW_NO_AUTO_UPDATE=1
-                  brew install gnutls texinfo automake autoconf llvm grep gnu-tar
+                  brew install gnutls texinfo automake autoconf llvm grep
                   # llvm --with-clang --with-lld
                   # libx11 libxpm jpeg libpng giflib libtiff gtk+3 ncurses
                   # michaeleisel/zld/zld
                   # /usr/local/bin/zld
-                  cd /usr/local/opt/grep/libexec/gnubin
-                  ls
                   ZLD_REPO_RELEASE="michaeleisel/zld/releases"
                   ZLD_LATEST="$(curl --silent https://api.github.com/repos/${ZLD_REPO_RELEASE}/latest | /usr/local/opt/grep/libexec/gnubin/grep -Po '"tag_name": "\K.*?(?=")')"
                   curl -fLO https://github.com/${ZLD_REPO_RELEASE}/download/${ZLD_LATEST}/zld.tar.xz
@@ -48,6 +44,7 @@ jobs:
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=./zld"
                   OTHER_LDFLAGS=" -fuse-ld=./zld"
 
+            - uses: actions/checkout@v2
 
             - name: rust setup
               id: rust-setup
