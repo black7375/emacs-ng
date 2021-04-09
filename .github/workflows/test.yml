@@ -107,7 +107,7 @@ jobs:
                   echo "CXXFLAGS= -g1 -O2" >> $GITHUB_ENV
                   echo "AR=llvm-ar" >> $GITHUB_ENV
                   echo "AS=llvm-as" >> $GITHUB_ENV
-                  echo "RANLIB="llvm-ranlib" >> $GITHUB_ENV
+                  echo "RANLIB=llvm-ranlib" >> $GITHUB_ENV
 
                   # Other Flags
                   echo "CARGO_INCREMENTAL=0" >> $GITHUB_ENV
