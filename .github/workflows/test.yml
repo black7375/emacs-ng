@@ -91,8 +91,8 @@ jobs:
                   gtar --verbose -xf ./zld.tar.xz
 
                   # export PATH="/usr/local/opt/llvm/bin:$PATH"
-                  # export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
-                  export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
+                  export CPLUS_INCLUDE_PATH=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH
+                  export LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH
                   export LD="$HOME/bin/zld"
                   export AR="/usr/local/opt/llvm/bin/llvm-ar"
                   export AS="/usr/local/opt/llvm/bin/llvm-as"
