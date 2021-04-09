@@ -104,40 +104,29 @@ jobs:
                   echo "CC=clang" >> $GITHUB_ENV
                   echo "CXX=clang++" >> $GITHUB_ENV
                   echo "CPP=clang -E" >> $GITHUB_ENV
-                  echo "CFLAGS= -g1 -O2" >> $GITHUB_ENV
-                  echo "CXXFLAGS= -g1 -O2" >> $GITHUB_ENV
+                  echo "CFLAGS= -g1 -O2 -fuse-ld=lld" >> $GITHUB_ENV
+                  echo "CXXFLAGS= -g1 -O2 -fuse-ld=lld" >> $GITHUB_ENV
+                  echo "LD=lld" >> $GITHUB_ENV
                   echo "AR=llvm-ar" >> $GITHUB_ENV
                   echo "AS=llvm-as" >> $GITHUB_ENV
                   echo "RANLIB=llvm-ranlib" >> $GITHUB_ENV
 
                   # Other Flags
                   echo "CARGO_INCREMENTAL=0" >> $GITHUB_ENV
-                  echo "RUSTFLAGS=-Zshare-generics=y -Cdebuginfo=1 -Copt-level=0" >> $GITHUB_ENV
+                  echo "RUSTFLAGS=-Zshare-generics=y -Cdebuginfo=1 -Copt-level=0 -Clink-arg=-fuse-ld=lld" >> $GITHUB_ENV
 
                   # Options used before
                   # RUSTFLAGS="-Dwarnings"
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
-
-            - name: env(for linux)
-              if: runner.os == 'Linux'
-              run: |
-                  echo "LD=lld" >> $GITHUB_ENV
-                  echo "CFLAGS=$CFLAGS -fuse-ld=lld" >> $GITHUB_ENV
-                  echo "CXXFLAGS=$CXXFLAGS -fuse-ld=lld" >> $GITHUB_ENV
-                  echo "RUSTFLAGS=$RUSTFLAGS -Clink-arg=-fuse-ld=lld" >> $GITHUB_ENV
 
             - name: env(for mac)
               if: runner.os == 'macOS'
               run: |
                   echo "CPLUS_INCLUD=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH" >> $GITHUB_ENV
                   echo "LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH" >> $GITHUB_ENV
-                  echo "LD=zld" >> $GITHUB_ENV
-                  echo "CFLAGS=$CFLAGS -fuse-ld=zld" >> $GITHUB_ENV
-                  echo "CXXFLAGS=$CXXFLAGS -fuse-ld=zld" >> $GITHUB_ENV
-                  # echo "CFLAGS=$CFLAGS -fuse-ld=zld -march=native" >> $GITHUB_ENV
-                  # echo "CXXFLAGS=$CXXFLAGS -fuse-ld=zld -march=native" >> $GITHUB_ENV
-                  echo "RUSTFLAGS=$RUSTFLAGS -Clink-arg=-fuse-ld=zld -Csplit-debuginfo=unpacked -Ctarget-cpu=native" >> $GITHUB_ENV
-                  echo "OTHER_LDFLAGS=-fuse-ld=zld" >> $GITHUB_ENV
+                  echo "CFLAGS=$CFLAGS -march=native" >> $GITHUB_ENV
+                  echo "CXXFLAGS=$CXXFLAGS -march=native" >> $GITHUB_ENV
+                  echo "RUSTFLAGS=$RUSTFLAGS -Csplit-debuginfo=unpacked -Ctarget-cpu=native" >> $GITHUB_ENV
 
 
             - name: configure(general)
