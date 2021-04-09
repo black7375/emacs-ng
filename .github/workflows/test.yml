@@ -124,9 +124,9 @@ jobs:
               run: |
                   echo "CPLUS_INCLUD=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH" >> $GITHUB_ENV
                   echo "LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH" >> $GITHUB_ENV
-                  echo "CFLAGS=$CFLAGS -march=native" >> $GITHUB_ENV
-                  echo "CXXFLAGS=$CXXFLAGS -march=native" >> $GITHUB_ENV
-                  echo "RUSTFLAGS=$RUSTFLAGS -Csplit-debuginfo=unpacked -Ctarget-cpu=native" >> $GITHUB_ENV
+                  # echo "CFLAGS=$CFLAGS -march=native" >> $GITHUB_ENV
+                  # echo "CXXFLAGS=$CXXFLAGS -march=native" >> $GITHUB_ENV
+                  # echo "RUSTFLAGS=$RUSTFLAGS -Csplit-debuginfo=unpacked -Ctarget-cpu=native" >> $GITHUB_ENV
 
 
             - name: configure(general)
