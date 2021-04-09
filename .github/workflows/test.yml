@@ -50,13 +50,13 @@ jobs:
                   # When use gcc: build-essential
 
                   ## Setup Env
-                  export LD="lld"
-                  export AR="llvm-ar"
-                  export AS="llvm-as"
-                  export RANLIB="llvm-ranlib"
-                  export CFLAGS=" -fuse-ld=lld"
-                  export CXXFLAGS=" -fuse-ld=lld"
-                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
+                  env LD="lld"
+                  env AR="llvm-ar"
+                  env AS="llvm-as"
+                  env RANLIB="llvm-ranlib"
+                  env CFLAGS=" -fuse-ld=lld"
+                  env CXXFLAGS=" -fuse-ld=lld"
+                  env RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
 
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
@@ -78,16 +78,16 @@ jobs:
                   gtar --verbose -xf ./zld.tar.xz
 
                   # export PATH="/usr/local/opt/llvm/bin:$PATH"
-                  export CPLUS_INCLUDE_PATH=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH
-                  export LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH
-                  export LD="$HOME/bin/zld"
-                  export AR="/usr/local/opt/llvm/bin/llvm-ar"
-                  export AS="/usr/local/opt/llvm/bin/llvm-as"
-                  export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  export CFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
-                  export CXXFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
-                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked -Ctarget-cpu=native"
-                  export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  env CPLUS_INCLUDE_PATH=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH
+                  env LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH
+                  env LD="$HOME/bin/zld"
+                  env AR="/usr/local/opt/llvm/bin/llvm-ar"
+                  env AS="/usr/local/opt/llvm/bin/llvm-as"
+                  env RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
+                  env CFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
+                  env CXXFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
+                  env RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked -Ctarget-cpu=native"
+                  env OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
                   # export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
 
                   ## nproc for mac
@@ -107,7 +107,7 @@ jobs:
             - name: rustfmt && env set
               run: |
                   # Configure $PATH: Executables are installed to $HOME/bin
-                  export PATH="$HOME/bin:$PATH"
+                  env PATH="$HOME/bin:$PATH"
 
                   ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings --without-native-compilation
                   admin/format-rust.sh
@@ -120,13 +120,13 @@ jobs:
                   which clang
                   echo "$CC"
                   # Compile with clang
-                  export CC="clang"
-                  export CXX="clang++"
-                  export CPP="clang -E"
+                  env CC="clang"
+                  env CXX="clang++"
+                  env CPP="clang -E"
 
                   # Other Flags
-                  export CARGO_INCREMENTAL=0
-                  export RUSTFLAGS="-Zshare-generics=y -Cdebuginfo=1 $RUSTFLAGS"
+                  env CARGO_INCREMENTAL=0
+                  env RUSTFLAGS="-Zshare-generics=y -Cdebuginfo=1 $RUSTFLAGS"
                   # -Copt-level=1 -Ctarget-cpu=native
                   # export CFLAGS="-g1 $CFLAGS"
                   # export CXXFLAGS="-g1 $CXXFLAGS"
