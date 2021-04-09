@@ -29,11 +29,11 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./rust_src/target
-                  key: ${{ runner.os }}-T2${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                  key: ${{ runner.os }}-T3${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-T2${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-T2${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-T2${{ matrix.build }}-rust
+                      ${{ runner.os }}-T3${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-T3${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-T3${{ matrix.build }}-rust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -107,7 +107,7 @@ jobs:
 
                   # Other Flags
                   echo "CARGO_INCREMENTAL=0" >> $GITHUB_ENV
-                  echo "RUSTFLAGS=-Zshare-generics=y -Cdebuginfo=1 $RUSTFLAGS" >> $GITHUB_ENV
+                  echo "RUSTFLAGS=-Zshare-generics=y -Cdebuginfo=1" >> $GITHUB_ENV
                   # -Copt-level=1 -Ctarget-cpu=native
                   # export CFLAGS="-g1 $CFLAGS"
                   # export CXXFLAGS="-g1 $CXXFLAGS"
@@ -121,26 +121,26 @@ jobs:
               if: runner.os == 'Linux'
               run: |
                   echo "LD=lld" >> $GITHUB_ENV
-                  # echo "AR=llvm-ar" >> $GITHUB_ENV
-                  # echo "AS=llvm-as" >> $GITHUB_ENV
-                  # echo "RANLIB="llvm-ranlib" >> $GITHUB_ENV
-                  echo CFLAGS="$CFLAGS -fuse-ld=lld" >> $GITHUB_ENV
-                  echo CXXFLAGS="$CFLAGS -fuse-ld=lld" >> $GITHUB_ENV
-                  echo RUSTFLAGS="$RUSTFLAGS -Clink-arg=-fuse-ld=lld" >> $GITHUB_ENV
+                  echo "AR=llvm-ar" >> $GITHUB_ENV
+                  echo "AS=llvm-as" >> $GITHUB_ENV
+                  echo "RANLIB="llvm-ranlib" >> $GITHUB_ENV
+                  echo "CFLAGS=$CFLAGS -fuse-ld=lld" >> $GITHUB_ENV
+                  echo "CXXFLAGS="$CFLAGS -fuse-ld=lld" >> $GITHUB_ENV
+                  echo "RUSTFLAGS=$RUSTFLAGS -Clink-arg=-fuse-ld=lld" >> $GITHUB_ENV
 
             - name: env(for mac)
               if: runner.os == 'macOS'
               run: |
                   echo "CPLUS_INCLUD=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH" >> $GITHUB_ENV
                   echo "LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH" >> $GITHUB_ENV
-                  # echo LD="$HOME/bin/zld" >> $GITHUB_ENV
-                  # echo AR="/usr/local/opt/llvm/bin/llvm-ar" >> $GITHUB_ENV
-                  # echo AS="/usr/local/opt/llvm/bin/llvm-as" >> $GITHUB_ENV
+                  echo "LD=zld" >> $GITHUB_ENV
+                  echo "AR=llvm-ar" >> $GITHUB_ENV
+                  echo "AS=llvm-as" >> $GITHUB_ENV
                   # echo RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  # echo CFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
-                  # env CXXFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
-                  # env RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked -Ctarget-cpu=native"
-                  # env OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  echo "CFLAGS=$CFLAGS -fuse-ld=zld -march=native" >> $GITHUB_ENV
+                  echo "CXXFLAGS=$CXXFLAGS -fuse-ld=zld -march=native" >> $GITHUB_ENV
+                  echo "RUSTFLAGS=$RUSTFLAGS -Clink-arg=-fuse-ld=zld -Csplit-debuginfo=unpacked -Ctarget-cpu=native" >> $GITHUB_ENV
+                  echo "OTHER_LDFLAGS=-fuse-ld=zld" >> $GITHUB_ENV
                   # export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
 
             - name: configure(general)
