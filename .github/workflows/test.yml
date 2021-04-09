@@ -28,9 +28,9 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./rust_src/target
-                  key: ${{ runner.os }}-CFRrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                  key: ${{ runner.os }}-LLVMrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-CFRrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-LLVMrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                       ${{ runner.os }}-CFRrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
                       ${{ runner.os }}-CFRrust
 
@@ -50,9 +50,9 @@ jobs:
 
                   ## Setup Env
                   export LD="lld"
-                  # export AR="llvm-ar"
-                  # export AS="llvm-as"
-                  # export RANLIB="llvm-ranlib"
+                  export AR="llvm-ar"
+                  export AS="llvm-as"
+                  export RANLIB="llvm-ranlib"
                   export CFLAGS=" -fuse-ld=lld"
                   export CXXFLAGS=" -fuse-ld=lld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
@@ -80,9 +80,9 @@ jobs:
                   # export CPLUS_INCLUDE_PATH=$(llvm-config --includedir):$CPLUS_INCLUDE_PATH
                   export LD_LIBRARY_PATH=$(llvm-config --libdir):$LD_LIBRARY_PATH
                   export LD="$HOME/bin/zld"
-                  # export AR="/usr/local/opt/llvm/bin/llvm-ar"
-                  # export AS="/usr/local/opt/llvm/bin/llvm-as"
-                  # export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
+                  export AR="/usr/local/opt/llvm/bin/llvm-ar"
+                  export AS="/usr/local/opt/llvm/bin/llvm-as"
+                  export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
                   export CFLAGS=" -fuse-ld=$HOME/bin/zld"
                   export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked"
