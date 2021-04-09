@@ -9,6 +9,7 @@ jobs:
             fail-fast: false
             matrix:
                 os: [ubuntu-latest, macos-latest]
+                build: [general, webrender]
 
         steps:
             - uses: actions/checkout@v2
@@ -28,11 +29,11 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./rust_src/target
-                  key: ${{ runner.os }}-MACMARCHrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                  key: ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-MACMARCHrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-MACMARCHrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-MACMARCHrust
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-${{ matrix.build }}-rust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -103,7 +104,7 @@ jobs:
                       ${{ runner.OS }}-build-zld-${{ steps.rust-setup.outputs.date }}
                       ${{ runner.OS }}-build-zld-
 
-            - name: rustfmt
+            - name: rustfmt && set env
               run: |
                   # Configure $PATH: Executables are installed to $HOME/bin
                   export PATH="$HOME/bin:$PATH"
@@ -111,8 +112,6 @@ jobs:
                   ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings --without-native-compilation
                   admin/format-rust.sh
 
-            - name: build
-              run: |
                   ## Set env
                   # Path Set
                   export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
@@ -132,13 +131,17 @@ jobs:
                   # export CXXFLAGS="-g1 $CXXFLAGS"
                   # -march=native
 
+            - name: build
+              run: |
+
                   ## Build
                   ./configure --enable-checking=glyphs --enable-rust-debug
                   # --enable-autodepend
                   echo "nproc: $((`nproc`+1))"
                   make -j$((`nproc`+1)) src
 
-                  ## Reduce Cache
+            - name: clean cache
+              run: |
                   # Note that all of the above need to be repeated for `release/` instead of
                   # `debug/` if your build script builds artifacts in release mode.
                   # https://bheisler.github.io/post/efficient-use-of-travis-ci-cache-for-rust/
@@ -154,7 +157,6 @@ jobs:
                   cd ../../rust_src/src
                   ../../src/emacs --batch --eval '(deno "fmt" "--check")'
                   cd ../../
-
 
             - name: run js tests
               run: |
