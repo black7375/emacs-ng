@@ -38,7 +38,7 @@ jobs:
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
               with:
-                  key: ${{ runner.os }}-build-ccache
+                  key: ${{ runner.os }}-${{ matrix.build }}-ccache
 
             - name: Install dependencies on Linux
               if: runner.os == 'Linux'
@@ -99,10 +99,10 @@ jobs:
               uses: actions/cache@v2
               with:
                   path: /tmp/zld-*
-                  key: ${{ runner.OS }}-build-zld-${{ steps.rust-setup.outputs.date }}
+                  key: ${{ runner.OS }}-${{ matrix.build }}-zld-${{ steps.rust-setup.outputs.date }}
                   restore-keys: |
-                      ${{ runner.OS }}-build-zld-${{ steps.rust-setup.outputs.date }}
-                      ${{ runner.OS }}-build-zld-
+                      ${{ runner.OS }}-${{ matrix.build }}-zld-${{ steps.rust-setup.outputs.date }}
+                      ${{ runner.OS }}-${{ matrix.build }}-zld-
 
             - name: rustfmt && set env
               run: |
@@ -132,13 +132,13 @@ jobs:
                   # -march=native
 
             - name: configure(general)
-              if: matrix.build == general
+              if: ${{ matrix.build == 'general' }}
               run: |
                   ./configure --enable-checking=glyphs --enable-rust-debug
                   # --enable-autodepend
 
             - name: configure(webrender)
-              if: matrix.build == webrender
+              if: ${{ matrix.build == 'webrender' }}
               run: |
                   ./configure --enable-checking=glyphs --enable-rust-debug --with-webrender
                   # --enable-autodepend
