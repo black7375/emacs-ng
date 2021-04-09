@@ -12,6 +12,19 @@ jobs:
                 build: [general, webrender]
 
         steps:
+            - name: env test pre
+              run: |
+                  echo "CC=clang" >> $GITHUB_ENV
+                  echo "CXX="clang++" >> $GITHUB_ENV
+                  echo "CPP='clang -E'" >> $GITHUB_ENV
+                  echo "========="
+                  echo "$CC"
+            - name: env test result
+              run: |
+                  echo "========="
+                  echo "$CC"
+                  echo "$CXX"
+                  echo "$CPP"
             - uses: actions/checkout@v2
 
             - name: rust setup
@@ -82,7 +95,7 @@ jobs:
                   echo LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH >> $GITHUB_ENV
                   echo LD="$HOME/bin/zld" >> $GITHUB_ENV
                   echo AR="/usr/local/opt/llvm/bin/llvm-ar" >> $GITHUB_ENV
-                  echo AS="/usr/local/opt/llvm/bin/llvm-as" >> $GIH
+                  echo AS="/usr/local/opt/llvm/bin/llvm-as" >> $GITHUB_ENV
                   echo RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
                   echo CFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
                   env CXXFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
@@ -120,9 +133,9 @@ jobs:
                   which clang
                   echo "$CC"
                   # Compile with clang
-                  echo CC="clang" >> $GIHUB_ENV
-                  echo CXX="clang++" >> $GITHUB_ENV
-                  echo CPP="clang -E" >> $GITHUB_ENV
+                  echo "CC=clang" >> $GITHUB_ENV
+                  echo "CXX="clang++" >> $GITHUB_ENV
+                  echo "CPP='clang -E'" >> $GITHUB_ENV
 
                   # Other Flags
                   env CARGO_INCREMENTAL=0
