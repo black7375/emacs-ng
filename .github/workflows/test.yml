@@ -34,6 +34,20 @@ jobs:
                       ${{ runner.os }}-LLVMRrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
                       ${{ runner.os }}-LLVMRrust
 
+            - name: objects cache
+              uses: actions/cache@v2
+              with:
+                  path: |
+                    lib/**/*.o
+                    lib-src/**/*.o
+                    src/**/*.o
+                    etc/charsets/*.map
+                    lisp/**/*.elc
+                  key: ${{ runner.os }}-build-object-${{ steps.rust-setup.outputs.week }}
+                  restore-keys: |
+                      ${{ runner.os }}-build-object-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-build-object-
+
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
               with:
