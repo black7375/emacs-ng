@@ -50,13 +50,13 @@ jobs:
                   # When use gcc: build-essential
 
                   ## Setup Env
-                  env LD="lld"
-                  env AR="llvm-ar"
-                  env AS="llvm-as"
-                  env RANLIB="llvm-ranlib"
-                  env CFLAGS=" -fuse-ld=lld"
-                  env CXXFLAGS=" -fuse-ld=lld"
-                  env RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
+                  echo LD="lld" >> $GITHUB_ENV
+                  echo AR="llvm-ar" >> $GITHUB_ENV
+                  echo AS="llvm-as" >> $GITHUB_ENV
+                  echo RANLIB="llvm-ranlib" >> $GITHUB_ENV
+                  echo CFLAGS=" -fuse-ld=lld" >> $GITHUB_ENV
+                  echo CXXFLAGS=" -fuse-ld=lld" >> $GITHUB_ENV
+                  echo RUSTFLAGS=" -Clink-arg=-fuse-ld=lld" >> $GITHUB_ENV
 
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
@@ -78,13 +78,13 @@ jobs:
                   gtar --verbose -xf ./zld.tar.xz
 
                   # export PATH="/usr/local/opt/llvm/bin:$PATH"
-                  env CPLUS_INCLUDE_PATH=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH
-                  env LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH
-                  env LD="$HOME/bin/zld"
-                  env AR="/usr/local/opt/llvm/bin/llvm-ar"
-                  env AS="/usr/local/opt/llvm/bin/llvm-as"
-                  env RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  env CFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
+                  echo CPLUS_INCLUDE_PATH=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH >> $GITHUB_ENV
+                  echo LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH >> $GITHUB_ENV
+                  echo LD="$HOME/bin/zld" >> $GITHUB_ENV
+                  echo AR="/usr/local/opt/llvm/bin/llvm-ar" >> $GITHUB_ENV
+                  echo AS="/usr/local/opt/llvm/bin/llvm-as" >> $GIH
+                  echo RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
+                  echo CFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
                   env CXXFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
                   env RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked -Ctarget-cpu=native"
                   env OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
@@ -107,22 +107,22 @@ jobs:
             - name: rustfmt && env set
               run: |
                   # Configure $PATH: Executables are installed to $HOME/bin
-                  env PATH="$HOME/bin:$PATH"
+                  echo "$HOME/bin" >> $GITHUB_PATH
 
                   ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings --without-native-compilation
                   admin/format-rust.sh
 
                   ## Set env
                   # Path Set
-                  export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+                  echo "/usr/lib/ccache:/usr/local/opt/ccache/libexec" >> $GITHUB_PATH
 
                   echo "==================0"
                   which clang
                   echo "$CC"
                   # Compile with clang
-                  env CC="clang"
-                  env CXX="clang++"
-                  env CPP="clang -E"
+                  echo CC="clang" >> $GIHUB_ENV
+                  echo CXX="clang++" >> $GITHUB_ENV
+                  echo CPP="clang -E" >> $GITHUB_ENV
 
                   # Other Flags
                   env CARGO_INCREMENTAL=0
