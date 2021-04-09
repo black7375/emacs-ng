@@ -31,9 +31,9 @@ jobs:
                       ./rust_src/target
                   key: ${{ runner.os }}-T0${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-T0${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-T0${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-T0${{ matrix.build }}-rust
+                      ${{ runner.os }}-T1${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-T1${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-T1${{ matrix.build }}-rust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -102,6 +102,8 @@ jobs:
                   echo "CC=clang" >> $GITHUB_ENV
                   echo "CXX=clang++" >> $GITHUB_ENV
                   echo "CPP=clang -E" >> $GITHUB_ENV
+                  echo "CFLAGS= -g1 -O2" >> $GITHUB_ENV
+                  echo "CXXFLAGS= -g1 -O2" >> $GITHUB_ENV
 
                   # Other Flags
                   echo "CARGO_INCREMENTAL=0" >> $GITHUB_ENV
