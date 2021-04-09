@@ -104,7 +104,7 @@ jobs:
                       ${{ runner.OS }}-${{ matrix.build }}-zld-${{ steps.rust-setup.outputs.date }}
                       ${{ runner.OS }}-${{ matrix.build }}-zld-
 
-            - name: rustfmt && set env
+            - name: rustfmt
               run: |
                   # Configure $PATH: Executables are installed to $HOME/bin
                   export PATH="$HOME/bin:$PATH"
@@ -112,6 +112,20 @@ jobs:
                   ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings --without-native-compilation
                   admin/format-rust.sh
 
+            - name: configure(general)
+              if: ${{ matrix.build == 'general' }}
+              run: |
+                  ./configure --enable-checking=glyphs --enable-rust-debug
+                  # --enable-autodepend
+
+            - name: configure(webrender)
+              if: ${{ matrix.build == 'webrender' }}
+              run: |
+                  ./configure --enable-checking=glyphs --enable-rust-debug --with-webrender
+                  # --enable-autodepend
+
+            - name: build
+              run: |
                   ## Set env
                   # Path Set
                   export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
@@ -131,20 +145,7 @@ jobs:
                   # export CXXFLAGS="-g1 $CXXFLAGS"
                   # -march=native
 
-            - name: configure(general)
-              if: ${{ matrix.build == 'general' }}
-              run: |
-                  ./configure --enable-checking=glyphs --enable-rust-debug
-                  # --enable-autodepend
-
-            - name: configure(webrender)
-              if: ${{ matrix.build == 'webrender' }}
-              run: |
-                  ./configure --enable-checking=glyphs --enable-rust-debug --with-webrender
-                  # --enable-autodepend
-
-            - name: build
-              run: |
+                  ## Build
                   make -j$((`nproc`+1)) src
 
                   # Note that all of the above need to be repeated for `release/` instead of
