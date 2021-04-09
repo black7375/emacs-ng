@@ -155,6 +155,7 @@ jobs:
                   ../../src/emacs --batch --eval '(deno "fmt" "--check")'
                   cd ../../
 
+
             - name: run js tests
               run: |
                   cd test/js/
