@@ -28,25 +28,11 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./rust_src/target
-                  key: ${{ runner.os }}-LLVMRrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                  key: ${{ runner.os }}-MACMARCHrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-LLVMRrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-LLVMRrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-LLVMRrust
-
-            - name: objects cache
-              uses: actions/cache@v2
-              with:
-                  path: |
-                      ./lib/**/*.o
-                      ./lib-src/**/*.o
-                      ./src/**/*.o
-                      ./etc/charsets/*.map
-                      ./lisp/**/*.elc
-                  key: ${{ runner.os }}-build-object-${{ steps.rust-setup.outputs.week }}
-                  restore-keys: |
-                      ${{ runner.os }}-build-object-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-build-object-
+                      ${{ runner.os }}-MACMARCHrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-MACMARCHrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-MACMARCHrust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -97,9 +83,9 @@ jobs:
                   export AR="/usr/local/opt/llvm/bin/llvm-ar"
                   export AS="/usr/local/opt/llvm/bin/llvm-as"
                   export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  export CFLAGS=" -fuse-ld=$HOME/bin/zld"
-                  export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
-                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked"
+                  export CFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
+                  export CXXFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
+                  export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked -Ctarget-cpu=native"
                   export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
                   # export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
 
@@ -141,7 +127,7 @@ jobs:
                   export RUSTFLAGS="-Zshare-generics=y -Cdebuginfo=1 $RUSTFLAGS"
                   # -Copt-level=1 -Ctarget-cpu=native
                   # RUSTFLAGS -Dwarnings
-                  export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
+                  # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
                   # export CFLAGS="-g1 $CFLAGS"
                   # export CXXFLAGS="-g1 $CXXFLAGS"
                   # -march=native
