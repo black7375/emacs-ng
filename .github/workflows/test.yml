@@ -27,11 +27,11 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./rust_src/target
-                  key: ${{ runner.os }}-CFrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                  key: ${{ runner.os }}-CFRrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-CFrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-CFrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-CFrust
+                      ${{ runner.os }}-CFRrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-CFRrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-CFRrust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -127,8 +127,8 @@ jobs:
                   # -Copt-level=1 -Ctarget-cpu=native
                   # RUSTFLAGS -Dwarnings
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
-                  export CFLAGS="-g1 $CFLAGS"
-                  export CXXFLAGS="-g1 $CXXFLAGS"
+                  # export CFLAGS="-g1 $CFLAGS"
+                  # export CXXFLAGS="-g1 $CXXFLAGS"
                   # -march=native
 
                   ## Build
