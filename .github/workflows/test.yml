@@ -132,13 +132,13 @@ jobs:
                   # -march=native
 
             - name: configure(general)
-              if: ${{ matrix.build == general }}
+              if: matrix.build == general
               run: |
                   ./configure --enable-checking=glyphs --enable-rust-debug
                   # --enable-autodepend
 
             - name: configure(webrender)
-              if: ${{ matrix.build == webrender }}
+              if: matrix.build == webrender
               run: |
                   ./configure --enable-checking=glyphs --enable-rust-debug --with-webrender
                   # --enable-autodepend
