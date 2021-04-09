@@ -29,9 +29,9 @@ jobs:
                       ./rust_src/target
                   key: ${{ runner.os }}-RFLinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-RFLinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-RFlinkerrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-RFlinkerrust
+                      ${{ runner.os }}-CFrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-CFrust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-CFrust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -52,7 +52,7 @@ jobs:
                   # export AR="llvm-ar"
                   # export AS="llvm-as"
                   # export RANLIB="llvm-ranlib"
-                  export CCFLAGS=" -fuse-ld=lld"
+                  export CFLAGS=" -fuse-ld=lld"
                   export CXXFLAGS=" -fuse-ld=lld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=lld"
 
@@ -82,7 +82,7 @@ jobs:
                   # export AR="/usr/local/opt/llvm/bin/llvm-ar"
                   # export AS="/usr/local/opt/llvm/bin/llvm-as"
                   # export RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  export CCFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  export CFLAGS=" -fuse-ld=$HOME/bin/zld"
                   export CXXFLAGS=" -fuse-ld=$HOME/bin/zld"
                   export RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked"
                   export OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
@@ -127,8 +127,9 @@ jobs:
                   # -Copt-level=1 -Ctarget-cpu=native
                   # RUSTFLAGS -Dwarnings
                   # export WERROR_CFLAGS="-Werror -Wno-error=deprecated-declarations"
-                  # export CFLAGS="-O1 -g1 -march=native"
-                  # export CXXFLAGS="-O1 -g1 -march=native"
+                  export CFLAGS="-g1 $CFLAGS"
+                  export CXXFLAGS="-g1 $CXXFLAGS"
+                  # -march=native
 
                   ## Build
                   ./configure --enable-checking=glyphs --enable-rust-debug
