@@ -15,7 +15,7 @@ jobs:
             - name: env test pre
               run: |
                   echo "CC=clang" >> $GITHUB_ENV
-                  echo "CXX="clang++" >> $GITHUB_ENV
+                  echo "CXX=clang++" >> $GITHUB_ENV
                   echo "CPP='clang -E'" >> $GITHUB_ENV
                   echo "========="
                   echo "$CC"
