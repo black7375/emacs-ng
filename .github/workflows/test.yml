@@ -29,11 +29,11 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./rust_src/target
-                  key: ${{ runner.os }}-T3${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                  key: ${{ runner.os }}-T4${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-T3${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-T3${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-T3${{ matrix.build }}-rust
+                      ${{ runner.os }}-T4${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-T4${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-T4${{ matrix.build }}-rust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -124,8 +124,8 @@ jobs:
               run: |
                   echo "CPLUS_INCLUD=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH" >> $GITHUB_ENV
                   echo "LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH" >> $GITHUB_ENV
-                  # echo "CFLAGS=$CFLAGS -march=native" >> $GITHUB_ENV
-                  # echo "CXXFLAGS=$CXXFLAGS -march=native" >> $GITHUB_ENV
+                  echo "CFLAGS=$CFLAGS -march=native" >> $GITHUB_ENV
+                  echo "CXXFLAGS=$CXXFLAGS -march=native" >> $GITHUB_ENV
                   # echo "RUSTFLAGS=$RUSTFLAGS -Csplit-debuginfo=unpacked -Ctarget-cpu=native" >> $GITHUB_ENV
 
 
