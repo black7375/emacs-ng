@@ -104,9 +104,9 @@ jobs:
                   echo "CC=clang" >> $GITHUB_ENV
                   echo "CXX=clang++" >> $GITHUB_ENV
                   echo "CPP=clang -E" >> $GITHUB_ENV
-                  echo "CFLAGS= -g1 -O2 -fuse-ld=lld" >> $GITHUB_ENV
-                  echo "CXXFLAGS= -g1 -O2 -fuse-ld=lld" >> $GITHUB_ENV
-                  echo "LD=lld" >> $GITHUB_ENV
+                  # echo "CFLAGS= -g1 -O2 -fuse-ld=lld" >> $GITHUB_ENV
+                  # echo "CXXFLAGS= -g1 -O2 -fuse-ld=lld" >> $GITHUB_ENV
+                  # echo "LD=lld" >> $GITHUB_ENV
                   # echo "AR=llvm-ar" >> $GITHUB_ENV
                   # echo "AS=llvm-as" >> $GITHUB_ENV
                   # echo "RANLIB=llvm-ranlib" >> $GITHUB_ENV
