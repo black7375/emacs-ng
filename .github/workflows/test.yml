@@ -112,7 +112,7 @@ jobs:
 
                   # Other Flags
                   echo "CARGO_INCREMENTAL=0" >> $GITHUB_ENV
-                  echo "RUSTFLAGS=-Zshare-generics=y -Cdebuginfo=1 -Copt-level=0 -Clink-arg=-fuse-ld=lld" >> $GITHUB_ENV
+                  echo "RUSTFLAGS=-Zshare-generics=y -Cdebuginfo=1 -Copt-level=0" >> $GITHUB_ENV
 
                   # Options used before
                   # RUSTFLAGS="-Dwarnings"
