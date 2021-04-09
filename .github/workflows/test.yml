@@ -71,6 +71,7 @@ jobs:
                   ## Set Path
                   echo "/usr/local/opt/llvm/bin" >> $GITHUB_PATH
                   echo "$HOME/bin" >> $GITHUB_PATH
+                  # echo "LDFLAGS=-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10" >> $GITHUB_ENV
 
                   ## nproc for mac
                   # https://github.com/memkind/memkind/issues/33
@@ -104,14 +105,13 @@ jobs:
                   echo "CPP=clang -E" >> $GITHUB_ENV
                   echo "CFLAGS= -g1 -O2" >> $GITHUB_ENV
                   echo "CXXFLAGS= -g1 -O2" >> $GITHUB_ENV
+                  echo "AR=llvm-ar" >> $GITHUB_ENV
+                  echo "AS=llvm-as" >> $GITHUB_ENV
+                  echo "RANLIB="llvm-ranlib" >> $GITHUB_ENV
 
                   # Other Flags
                   echo "CARGO_INCREMENTAL=0" >> $GITHUB_ENV
-                  echo "RUSTFLAGS=-Zshare-generics=y -Cdebuginfo=1" >> $GITHUB_ENV
-                  # -Copt-level=1 -Ctarget-cpu=native
-                  # export CFLAGS="-g1 $CFLAGS"
-                  # export CXXFLAGS="-g1 $CXXFLAGS"
-                  # -march=native
+                  echo "RUSTFLAGS=-Zshare-generics=y -Cdebuginfo=1 -Copt-level=0" >> $GITHUB_ENV
 
                   # Options used before
                   # RUSTFLAGS="-Dwarnings"
@@ -121,9 +121,6 @@ jobs:
               if: runner.os == 'Linux'
               run: |
                   echo "LD=lld" >> $GITHUB_ENV
-                  echo "AR=llvm-ar" >> $GITHUB_ENV
-                  echo "AS=llvm-as" >> $GITHUB_ENV
-                  echo "RANLIB="llvm-ranlib" >> $GITHUB_ENV
                   echo "CFLAGS=$CFLAGS -fuse-ld=lld" >> $GITHUB_ENV
                   echo "CXXFLAGS="$CFLAGS -fuse-ld=lld" >> $GITHUB_ENV
                   echo "RUSTFLAGS=$RUSTFLAGS -Clink-arg=-fuse-ld=lld" >> $GITHUB_ENV
@@ -134,14 +131,14 @@ jobs:
                   echo "CPLUS_INCLUD=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH" >> $GITHUB_ENV
                   echo "LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH" >> $GITHUB_ENV
                   echo "LD=zld" >> $GITHUB_ENV
-                  echo "AR=llvm-ar" >> $GITHUB_ENV
-                  echo "AS=llvm-as" >> $GITHUB_ENV
-                  # echo RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
                   echo "CFLAGS=$CFLAGS -fuse-ld=zld -march=native" >> $GITHUB_ENV
                   echo "CXXFLAGS=$CXXFLAGS -fuse-ld=zld -march=native" >> $GITHUB_ENV
                   echo "RUSTFLAGS=$RUSTFLAGS -Clink-arg=-fuse-ld=zld -Csplit-debuginfo=unpacked -Ctarget-cpu=native" >> $GITHUB_ENV
                   echo "OTHER_LDFLAGS=-fuse-ld=zld" >> $GITHUB_ENV
-                  # export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
+
+                  echo "================"
+                  which zld
+                  which llvm-ar
 
             - name: configure(general)
               if: ${{ matrix.build == 'general' }}
