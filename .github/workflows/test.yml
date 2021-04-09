@@ -12,19 +12,6 @@ jobs:
                 build: [general, webrender]
 
         steps:
-            - name: env test pre
-              run: |
-                  echo "CC=clang" >> $GITHUB_ENV
-                  echo "CXX=clang++" >> $GITHUB_ENV
-                  echo "CPP='clang -E'" >> $GITHUB_ENV
-                  echo "========="
-                  echo "$CC"
-            - name: env test result
-              run: |
-                  echo "========="
-                  echo "$CC"
-                  echo "$CXX"
-                  echo "$CPP"
             - uses: actions/checkout@v2
 
             - name: rust setup
@@ -42,11 +29,11 @@ jobs:
                       ~/.cargo/registry/cache
                       ~/.cargo/git
                       ./rust_src/target
-                  key: ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                  key: ${{ runner.os }}-T0${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
-                      ${{ runner.os }}-${{ matrix.build }}-rust
+                      ${{ runner.os }}-T0${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-T0${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-T0${{ matrix.build }}-rust
 
             - name: build cache
               uses: hendrikmuhs/ccache-action@v1
@@ -63,13 +50,13 @@ jobs:
                   # When use gcc: build-essential
 
                   ## Setup Env
-                  echo LD="lld" >> $GITHUB_ENV
-                  echo AR="llvm-ar" >> $GITHUB_ENV
-                  echo AS="llvm-as" >> $GITHUB_ENV
-                  echo RANLIB="llvm-ranlib" >> $GITHUB_ENV
-                  echo CFLAGS=" -fuse-ld=lld" >> $GITHUB_ENV
-                  echo CXXFLAGS=" -fuse-ld=lld" >> $GITHUB_ENV
-                  echo RUSTFLAGS=" -Clink-arg=-fuse-ld=lld" >> $GITHUB_ENV
+                  # echo "LD=lld" >> $GITHUB_ENV
+                  # echo "AR=llvm-ar" >> $GITHUB_ENV
+                  # echo "AS=llvm-as" >> $GITHUB_ENV
+                  # echo "RANLIB="llvm-ranlib" >> $GITHUB_ENV
+                  # echo CFLAGS=" -fuse-ld=lld" >> $GITHUB_ENV
+                  # echo CXXFLAGS=" -fuse-ld=lld" >> $GITHUB_ENV
+                  # echo RUSTFLAGS=" -Clink-arg=-fuse-ld=lld" >> $GITHUB_ENV
 
             - name: Install dependencies on macOS
               if: runner.os == 'macOS'
@@ -91,21 +78,21 @@ jobs:
                   gtar --verbose -xf ./zld.tar.xz
 
                   # export PATH="/usr/local/opt/llvm/bin:$PATH"
-                  echo CPLUS_INCLUDE_PATH=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH >> $GITHUB_ENV
-                  echo LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH >> $GITHUB_ENV
-                  echo LD="$HOME/bin/zld" >> $GITHUB_ENV
-                  echo AR="/usr/local/opt/llvm/bin/llvm-ar" >> $GITHUB_ENV
-                  echo AS="/usr/local/opt/llvm/bin/llvm-as" >> $GITHUB_ENV
-                  echo RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
-                  echo CFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
-                  env CXXFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
-                  env RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked -Ctarget-cpu=native"
-                  env OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
+                  # echo CPLUS_INCLUDE_PATH=$(/usr/local/opt/llvm/bin/llvm-config --includedir):$CPLUS_INCLUDE_PATH >> $GITHUB_ENV
+                  # echo LD_LIBRARY_PATH=$(/usr/local/opt/llvm/bin/llvm-config --libdir):$LD_LIBRARY_PATH >> $GITHUB_ENV
+                  # echo LD="$HOME/bin/zld" >> $GITHUB_ENV
+                  # echo AR="/usr/local/opt/llvm/bin/llvm-ar" >> $GITHUB_ENV
+                  # echo AS="/usr/local/opt/llvm/bin/llvm-as" >> $GITHUB_ENV
+                  # echo RANLIB="/usr/local/opt/llvm/bin/llvm-ranlib"
+                  # echo CFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
+                  # env CXXFLAGS=" -fuse-ld=$HOME/bin/zld -march=native"
+                  # env RUSTFLAGS=" -Clink-arg=-fuse-ld=$HOME/bin/zld -Csplit-debuginfo=unpacked -Ctarget-cpu=native"
+                  # env OTHER_LDFLAGS=" -fuse-ld=$HOME/bin/zld"
                   # export LDFLAGS="-L/usr/local/Cellar/libgccjit/10.2.0_1/lib/gcc/10"
 
                   ## nproc for mac
                   # https://github.com/memkind/memkind/issues/33
-                  alias nproc="sysctl -n hw.logicalcpu"
+                  echo "alias nproc='sysctl -n hw.logicalcpu'" >> $GITHUB_ENV
 
             - name: zld cache(for mac)
               if: runner.os == 'macOS'
@@ -134,12 +121,12 @@ jobs:
                   echo "$CC"
                   # Compile with clang
                   echo "CC=clang" >> $GITHUB_ENV
-                  echo "CXX="clang++" >> $GITHUB_ENV
+                  echo "CXX=clang++" >> $GITHUB_ENV
                   echo "CPP='clang -E'" >> $GITHUB_ENV
 
                   # Other Flags
-                  env CARGO_INCREMENTAL=0
-                  env RUSTFLAGS="-Zshare-generics=y -Cdebuginfo=1 $RUSTFLAGS"
+                  echo "CARGO_INCREMENTAL=0" >> $GITHUB_ENV
+                  echo "RUSTFLAGS='-Zshare-generics=y -Cdebuginfo=1 $RUSTFLAGS'" >> $GITHUB_ENV
                   # -Copt-level=1 -Ctarget-cpu=native
                   # export CFLAGS="-g1 $CFLAGS"
                   # export CXXFLAGS="-g1 $CXXFLAGS"
