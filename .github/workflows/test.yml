@@ -89,6 +89,8 @@ jobs:
 
             - name: rustfmt && common env set
               run: |
+                  which clang
+                  which llvm-ar
                   # Configure $PATH: Executables are installed to $HOME/bin
                   export PATH="$HOME/bin:$PATH"
 
