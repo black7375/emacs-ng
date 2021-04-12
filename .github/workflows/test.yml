@@ -30,9 +30,9 @@ jobs:
                       ~/.cargo/git
                       ./rust_src/target
                   key: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-newKey
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-Tokio
                   restore-keys: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-CargoLock
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-newKey
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
                       ${{ runner.os }}-${{ matrix.build }}-rust
