@@ -22,6 +22,7 @@ jobs:
                   echo "::set-output name=date::$(/bin/date)"
 
             - name: rust cache
+              id: rust-cache
               uses: actions/cache@v2
               with:
                   path: |
@@ -29,9 +30,9 @@ jobs:
                       ~/.cargo/git
                       ./rust_src/target
                   key: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-Tokio
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-CargoCache
                   restore-keys: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-newKey
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-Tokio
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
                       ${{ runner.os }}-${{ matrix.build }}-rust
@@ -127,6 +128,9 @@ jobs:
                   # lib -> lib-src -> src -> lisp -> info
                   make -j$((`nproc`+1)) src
 
+            - name: cleanup
+              if: steps.rust-cache.outputs.cache-hit != 'true'
+              run: |
                   ## Reduce Cache
                   # Note that all of the above need to be repeated for `release/` instead of
                   # `debug/` if your build script builds artifacts in release mode.
@@ -135,6 +139,12 @@ jobs:
                   find ./rust_src/target/debug -maxdepth 1 -type f -delete
                   # Delete just meta data
                   rm -f  ./rust_src/target/.rustc_info.json
+
+                  ## Cargo Cache Clean
+                  cargo install cargo-cache
+                  cargo cache --autoclean-expensive
+                  cargo cache
+                  cargo uninstall cargo-cache
 
             - name: js fmt
               run: |
