@@ -67,7 +67,7 @@ jobs:
 
                   ## nproc for mac
                   # https://github.com/memkind/memkind/issues/33
-                  alias nproc="sysctl -n hw.logicalcpu"
+                  echo "alias nproc=sysctl -n hw.logicalcpu" >> $GITHUB_ENV
 
             - name: rustfmt && common env set
               run: |
