@@ -30,7 +30,7 @@ jobs:
                       ~/.cargo/git
                       ./rust_src/target
                   key: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-CargoCache
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-FMT
                   restore-keys: |
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-CargoCache
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
@@ -69,13 +69,10 @@ jobs:
                   # https://github.com/memkind/memkind/issues/33
                   echo "alias nproc=sysctl -n hw.logicalcpu" >> $GITHUB_ENV
 
-            - name: rustfmt && common env set
+            - name: common env set
               run: |
-                  # Configure $PATH: Executables are installed to $HOME/bin
-                  export PATH="$HOME/bin:$PATH"
-
-                  ./autogen.sh && ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings
-                  admin/format-rust.sh
+                  # autogen
+                  ./autogen.sh
 
                   ## Set env
                   # Path Set
@@ -102,6 +99,7 @@ jobs:
                   echo "CFLAGS=$CFLAGS -fuse-ld=lld" >> $GITHUB_ENV
                   echo "CXXFLAGS=$CXXFLAGS -fuse-ld=lld" >> $GITHUB_ENV
                   echo "RUSTFLAGS=$RUSTFLAGS -Clink-arg=-fuse-ld=lld" >> $GITHUB_ENV
+                  echo "NPROC=nproc" >> $GITHUB_ENV
 
             - name: env(for mac)
               if: runner.os == 'macOS'
@@ -111,6 +109,10 @@ jobs:
                   echo "CFLAGS=$CFLAGS -march=native" >> $GITHUB_ENV
                   echo "CXXFLAGS=$CXXFLAGS -march=native" >> $GITHUB_ENV
                   echo "RUSTFLAGS=$RUSTFLAGS -Ctarget-cpu=native" >> $GITHUB_ENV
+
+                  ## nproc for mac
+                  # https://github.com/memkind/memkind/issues/33
+                  echo "NPROC=sysctl -n hw.logicalcpu" >> $GITHUB_ENV
 
             - name: configure(general)
               if: ${{ matrix.build == 'general' }}
@@ -126,22 +128,9 @@ jobs:
               run: |
                   # Avoid lisp compile && make info.
                   # lib -> lib-src -> src -> lisp -> info
-                  make -j$((`nproc`+1)) src
+                  make -j$((`$NPROC`+1)) src
 
-            - name: js fmt
-              run: |
-                  cd test/js/
-                  ../../src/emacs --batch --eval '(deno "fmt" "--check")'
-                  cd ../../rust_src/src
-                  ../../src/emacs --batch --eval '(deno "fmt" "--check")'
-                  cd ../../
-
-            - name: run js tests
-              run: |
-                  cd test/js/
-                  ../../src/emacs --batch --eval '(deno "test" "main.js" "--allow-read" "--allow-write")'
-
-            - name: cleanup
+            - name: build cleanup
               if: steps.rust-cache.outputs.cache-hit != 'true'
               run: |
                   ## Reduce Cache
@@ -157,3 +146,23 @@ jobs:
                   cargo install cargo-cache --no-default-features --features ci-autoclean cargo-cache
                   cargo-cache
                   cargo uninstall cargo-cache
+
+            - name: rust fmt
+              run: |
+                  # Configure $PATH: Executables are installed to $HOME/bin
+                  export PATH="$HOME/bin:$PATH"
+
+                  admin/format-rust.sh
+
+            - name: js fmt
+              run: |
+                  cd test/js/
+                  ../../src/emacs --batch --eval '(deno "fmt" "--check")'
+                  cd ../../rust_src/src
+                  ../../src/emacs --batch --eval '(deno "fmt" "--check")'
+                  cd ../../
+
+            - name: run js tests
+              run: |
+                  cd test/js/
+                  ../../src/emacs --batch --eval '(deno "test" "main.js" "--allow-read" "--allow-write")'
