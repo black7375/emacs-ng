@@ -32,7 +32,7 @@ jobs:
                   key: |
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-CargoCache
                   restore-keys: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-Tokio
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-CargoCache
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
                       ${{ runner.os }}-${{ matrix.build }}-rust
@@ -128,6 +128,19 @@ jobs:
                   # lib -> lib-src -> src -> lisp -> info
                   make -j$((`nproc`+1)) src
 
+            - name: js fmt
+              run: |
+                  cd test/js/
+                  ../../src/emacs --batch --eval '(deno "fmt" "--check")'
+                  cd ../../rust_src/src
+                  ../../src/emacs --batch --eval '(deno "fmt" "--check")'
+                  cd ../../
+
+            - name: run js tests
+              run: |
+                  cd test/js/
+                  ../../src/emacs --batch --eval '(deno "test" "main.js" "--allow-read" "--allow-write")'
+
             - name: cleanup
               if: steps.rust-cache.outputs.cache-hit != 'true'
               run: |
@@ -144,16 +157,3 @@ jobs:
                   cargo install cargo-cache --no-default-features --features ci-autoclean cargo-cache
                   cargo-cache
                   cargo uninstall cargo-cache
-
-            - name: js fmt
-              run: |
-                  cd test/js/
-                  ../../src/emacs --batch --eval '(deno "fmt" "--check")'
-                  cd ../../rust_src/src
-                  ../../src/emacs --batch --eval '(deno "fmt" "--check")'
-                  cd ../../
-
-            - name: run js tests
-              run: |
-                  cd test/js/
-                  ../../src/emacs --batch --eval '(deno "test" "main.js" "--allow-read" "--allow-write")'
