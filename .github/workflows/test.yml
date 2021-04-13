@@ -12,7 +12,7 @@ jobs:
               run: |
                   rustup install $(cat rust-toolchain)
                   rustup component add rustfmt-preview
-                  echo "::set-output name=date::$(/bin/date)"
+                  echo "::set-output name=week::$(/bin/date -u '+%Yy_%mm_%Ww')"
 
             - name: rust cache
               uses: actions/cache@v2
@@ -22,9 +22,9 @@ jobs:
                       ~/.cargo/git
                       ./rust_src/target
                   key: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.date }}
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.date }}
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/rustfmt.toml') }}-
                       ${{ runner.os }}-${{ matrix.build }}-rust
 
@@ -34,12 +34,15 @@ jobs:
                   ## Package Install
                   sudo apt install -y libgnutls28-dev
 
+            - name: configure
+              run: |
+                  ./autogen.sh
+                  ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings
+
             - name: rust fmt
               run: |
                   # Configure $PATH: Executables are installed to $HOME/bin
                   export PATH="$HOME/bin:$PATH"
-                  ./autogen.sh
-                  ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings
                   admin/format-rust.sh
 
     build-test:
