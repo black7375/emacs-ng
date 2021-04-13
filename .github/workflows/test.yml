@@ -141,9 +141,8 @@ jobs:
                   rm -f  ./rust_src/target/.rustc_info.json
 
                   ## Cargo Cache Clean
-                  cargo install cargo-cache
-                  cargo cache --autoclean-expensive
-                  cargo cache
+                  cargo install cargo-cache --no-default-features --features ci-autoclean cargo-cache
+                  cargo-cache
                   cargo uninstall cargo-cache
 
             - name: js fmt
