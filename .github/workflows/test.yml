@@ -151,7 +151,7 @@ jobs:
               run: |
                   # Configure $PATH: Executables are installed to $HOME/bin
                   export PATH="$HOME/bin:$PATH"
-
+                  ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings
                   admin/format-rust.sh
 
             - name: js fmt
