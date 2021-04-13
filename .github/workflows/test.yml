@@ -3,6 +3,45 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+    rustfmt-test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: rust setup
+              id: rust-setup
+              run: |
+                  rustup install $(cat rust-toolchain)
+                  rustup component add rustfmt-preview
+                  echo "::set-output name=date::$(/bin/date)"
+
+            - name: rust cache
+              uses: actions/cache@v2
+              with:
+                  path: |
+                      ~/.cargo/registry/cache
+                      ~/.cargo/git
+                      ./rust_src/target
+                  key: |
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.date }}
+                  restore-keys: |
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.date }}
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-${{ matrix.build }}-rust
+
+            - name: Install dependencies on Linux
+              if: runner.os == 'Linux'
+              run: |
+                  ## Package Install
+                  sudo apt install -y libgnutls28-dev
+
+            - name: rust fmt
+              run: |
+                  # Configure $PATH: Executables are installed to $HOME/bin
+                  export PATH="$HOME/bin:$PATH"
+                  ./autogen.sh
+                  ./configure --without-makeinfo --with-x=no --with-ns=no --without-gconf --without-gsettings
+                  admin/format-rust.sh
+
     build-test:
         runs-on: ${{ matrix.os }}
         strategy:
@@ -17,9 +56,7 @@ jobs:
               id: rust-setup
               run: |
                   rustup install $(cat rust-toolchain)
-                  rustup component add rustfmt-preview
                   echo "::set-output name=week::$(/bin/date -u '+%Yy_%mm_%Ww')"
-                  echo "::set-output name=date::$(/bin/date)"
 
             - name: rust cache
               id: rust-cache
@@ -30,11 +67,10 @@ jobs:
                       ~/.cargo/git
                       ./rust_src/target
                   key: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-FMT
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*') }}-${{ steps.rust-setup.outputs.week }}
                   restore-keys: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}-CargoCache
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-${{ steps.rust-setup.outputs.week }}
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*', '**/rustfmt.toml') }}-
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*') }}-
                       ${{ runner.os }}-${{ matrix.build }}-rust
 
             - name: c cache
@@ -123,12 +159,6 @@ jobs:
               if: ${{ matrix.build == 'webrender' }}
               run: |
                   ./configure --enable-checking=glyphs --enable-rust-debug --with-webrender
-
-            - name: rustfmt
-              run: |
-                  # Configure $PATH: Executables are installed to $HOME/bin
-                  export PATH="$HOME/bin:$PATH"
-                  admin/format-rust.sh
 
             - name: build
               run: |
