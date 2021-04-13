@@ -72,7 +72,7 @@ jobs:
                   key: |
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*') }}-${{ steps.rust-setup.outputs.week }}-Deno
                   restore-keys: |
-                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*') }}-${{ steps.rust-setup.outputs.week }}
+                      ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*') }}-${{ steps.rust-setup.outputs.week }}-Deno
                       ${{ runner.os }}-${{ matrix.build }}-rust-${{ hashFiles('**/rust-toolchain', '**/Cargo.toml*') }}-
                       ${{ runner.os }}-${{ matrix.build }}-rust
 
